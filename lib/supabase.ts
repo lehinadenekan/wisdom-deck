@@ -46,6 +46,25 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   }
 })();
 
+// Helper function to validate word format for game use
+const isValidGameWord = (word: string): boolean => {
+  const cleanWord = word.trim().normalize('NFC');
+  
+  // Check for hyphens
+  if (cleanWord.includes('-')) {
+    console.log(`Filtering out hyphenated word: ${cleanWord}`);
+    return false;
+  }
+  
+  // Check for spaces
+  if (cleanWord.includes(' ')) {
+    console.log(`Filtering out multi-word entry: ${cleanWord}`);
+    return false;
+  }
+  
+  return true;
+};
+
 // Helper function to determine which dictionary table to query
 const getDictionaryTable = (word: string): string => {
   const firstChar = word.toLowerCase().normalize('NFC').charAt(0);
@@ -109,33 +128,111 @@ const getUnicodePoints = (str: string): { grapheme: string; points: number[] }[]
 
 // Get a random 5-letter word for the Word Master game
 export async function getRandomWordMasterWord(wordLength: number = 5): Promise<WordleWord> {
-  try {
-    const table = Math.random() < 0.5 ? 'dictionary_ai' : 'dictionary_jz';
-    console.log(`Querying table: ${table} for word length: ${wordLength}`);
+  const maxAttempts = 10;
+  let attempts = 0;
+  
+  while (attempts < maxAttempts) {
+    try {
+      attempts++;
+      console.log(`Attempt ${attempts}/${maxAttempts} to find valid word`);
+      
+      const table = Math.random() < 0.5 ? 'dictionary_ai' : 'dictionary_jz';
+      console.log(`Querying table: ${table} for word length: ${wordLength}`);
 
-    const { count } = await supabase
-      .from(table)
-      .select('*', { count: 'exact', head: true })
-      .eq('word_length', wordLength);
-
-    if (!count || count === 0) {
-      console.log(`No ${wordLength}-letter words found in ${table}, trying fallback to 5-letter words`);
-      // Fallback to 5-letter words if requested length not available
-      const { count: fallbackCount } = await supabase
+      const { count } = await supabase
         .from(table)
         .select('*', { count: 'exact', head: true })
-        .eq('word_length', 5);
-      
-      if (!fallbackCount || fallbackCount === 0) {
-        throw new Error(`No words found in ${table}`);
+        .eq('word_length', wordLength);
+
+      if (!count || count === 0) {
+        console.log(`No ${wordLength}-letter words found in ${table}, trying fallback to 5-letter words`);
+        // Fallback to 5-letter words if requested length not available
+        const { count: fallbackCount } = await supabase
+          .from(table)
+          .select('*', { count: 'exact', head: true })
+          .eq('word_length', 5);
+        
+        if (!fallbackCount || fallbackCount === 0) {
+          throw new Error(`No words found in ${table}`);
+        }
+        
+        const randomOffset = Math.floor(Math.random() * fallbackCount);
+        
+        const { data, error } = await supabase
+          .from(table)
+          .select()
+          .eq('word_length', 5)
+          .range(randomOffset, randomOffset)
+          .limit(1);
+
+        if (error || !data || data.length === 0) {
+          throw error || new Error('No word found');
+        }
+
+        const wordData = data[0];
+        
+        // Extract and validate word variants for fallback (5-letter words)
+        const wordVariants = [];
+        const commaParts = wordData.word.split(',');
+        
+        for (const part of commaParts) {
+          const cleanPart = part.split('(')[0].trim();
+          if (cleanPart) {
+            // Count graphemes to validate length
+            const partLength = countGraphemes(cleanPart);
+            console.log(`Fallback - Checking variant: "${cleanPart}" (${partLength} graphemes)`);
+            
+            // Only include variants that match requested word length (5 for fallback) and are valid game words
+            if (partLength === 5 && isValidGameWord(cleanPart)) {
+              wordVariants.push(cleanPart);
+            }
+          }
+        }
+        
+        // Select first valid variant or fallback
+        let extractedWord;
+        if (wordVariants.length > 0) {
+          extractedWord = wordVariants[0];
+          console.log(`Fallback - Selected valid variant: "${extractedWord}" (${countGraphemes(extractedWord)} graphemes)`);
+        } else {
+          // Fallback: try first word part and validate
+          const fallbackWord = wordData.word.split(/[\s,\(]/)[0].trim();
+          const fallbackLength = countGraphemes(fallbackWord);
+          console.log(`Fallback - Fallback word: "${fallbackWord}" (${fallbackLength} graphemes)`);
+          
+          if (fallbackLength === 5 && isValidGameWord(fallbackWord)) {
+            extractedWord = fallbackWord;
+          } else {
+            console.log(`Fallback - Invalid word format, trying next attempt`);
+            continue; // Try next attempt
+          }
+        }
+        
+        // Final validation
+        const finalLength = countGraphemes(extractedWord);
+        if (finalLength !== 5) {
+          console.error(`Fallback - Final validation failed: expected 5, got ${finalLength} for word "${extractedWord}"`);
+          continue; // Try next attempt
+        }
+        
+        console.log('Selected random word (fallback):', {
+          original: wordData.word,
+          extracted: extractedWord,
+          wordLength: countGraphemes(extractedWord)
+        });
+
+        return {
+          ...wordData,
+          word: extractedWord
+        } as WordleWord;
       }
-      
-      const randomOffset = Math.floor(Math.random() * fallbackCount);
+
+      const randomOffset = Math.floor(Math.random() * count);
       
       const { data, error } = await supabase
         .from(table)
         .select()
-        .eq('word_length', 5)
+        .eq('word_length', wordLength)
         .range(randomOffset, randomOffset)
         .limit(1);
 
@@ -145,7 +242,7 @@ export async function getRandomWordMasterWord(wordLength: number = 5): Promise<W
 
       const wordData = data[0];
       
-      // Extract and validate word variants for fallback (5-letter words)
+      // Extract and validate word variants
       const wordVariants = [];
       const commaParts = wordData.word.split(',');
       
@@ -154,10 +251,10 @@ export async function getRandomWordMasterWord(wordLength: number = 5): Promise<W
         if (cleanPart) {
           // Count graphemes to validate length
           const partLength = countGraphemes(cleanPart);
-          console.log(`Fallback - Checking variant: "${cleanPart}" (${partLength} graphemes)`);
+          console.log(`Checking variant: "${cleanPart}" (${partLength} graphemes)`);
           
-          // Only include variants that match requested word length (5 for fallback)
-          if (partLength === 5) {
+          // Only include variants that match requested word length and are valid game words
+          if (partLength === wordLength && isValidGameWord(cleanPart)) {
             wordVariants.push(cleanPart);
           }
         }
@@ -167,29 +264,29 @@ export async function getRandomWordMasterWord(wordLength: number = 5): Promise<W
       let extractedWord;
       if (wordVariants.length > 0) {
         extractedWord = wordVariants[0];
-        console.log(`Fallback - Selected valid variant: "${extractedWord}" (${countGraphemes(extractedWord)} graphemes)`);
+        console.log(`Selected valid variant: "${extractedWord}" (${countGraphemes(extractedWord)} graphemes)`);
       } else {
         // Fallback: try first word part and validate
         const fallbackWord = wordData.word.split(/[\s,\(]/)[0].trim();
         const fallbackLength = countGraphemes(fallbackWord);
-        console.log(`Fallback - Fallback word: "${fallbackWord}" (${fallbackLength} graphemes)`);
+        console.log(`Fallback word: "${fallbackWord}" (${fallbackLength} graphemes)`);
         
-        if (fallbackLength === 5) {
+        if (fallbackLength === wordLength && isValidGameWord(fallbackWord)) {
           extractedWord = fallbackWord;
         } else {
-          console.error(`Fallback - No valid 5-letter variants found in: ${wordData.word}`);
-          throw new Error(`Word length mismatch: expected 5, database entry has no matching variants`);
+          console.log(`Invalid word format, trying next attempt`);
+          continue; // Try next attempt
         }
       }
       
       // Final validation
       const finalLength = countGraphemes(extractedWord);
-      if (finalLength !== 5) {
-        console.error(`Fallback - Final validation failed: expected 5, got ${finalLength} for word "${extractedWord}"`);
-        throw new Error(`Word length validation failed: ${extractedWord} has ${finalLength} letters, expected 5`);
+      if (finalLength !== wordLength) {
+        console.error(`Final validation failed: expected ${wordLength}, got ${finalLength} for word "${extractedWord}"`);
+        continue; // Try next attempt
       }
       
-      console.log('Selected random word (fallback):', {
+      console.log('Selected random word:', {
         original: wordData.word,
         extracted: extractedWord,
         wordLength: countGraphemes(extractedWord)
@@ -199,82 +296,18 @@ export async function getRandomWordMasterWord(wordLength: number = 5): Promise<W
         ...wordData,
         word: extractedWord
       } as WordleWord;
-    }
 
-    const randomOffset = Math.floor(Math.random() * count);
-    
-    const { data, error } = await supabase
-      .from(table)
-      .select()
-      .eq('word_length', wordLength)
-      .range(randomOffset, randomOffset)
-      .limit(1);
-
-    if (error || !data || data.length === 0) {
-      throw error || new Error('No word found');
-    }
-
-    const wordData = data[0];
-    
-    // Extract and validate word variants
-    const wordVariants = [];
-    const commaParts = wordData.word.split(',');
-    
-    for (const part of commaParts) {
-      const cleanPart = part.split('(')[0].trim();
-      if (cleanPart) {
-        // Count graphemes to validate length
-        const partLength = countGraphemes(cleanPart);
-        console.log(`Checking variant: "${cleanPart}" (${partLength} graphemes)`);
-        
-        // Only include variants that match requested word length
-        if (partLength === wordLength) {
-          wordVariants.push(cleanPart);
-        }
+    } catch (error) {
+      console.error(`Error in getRandomWordMasterWord (attempt ${attempts}):`, error);
+      if (attempts >= maxAttempts) {
+        throw error;
       }
+      // Continue to next attempt
     }
-    
-    // Select first valid variant or fallback
-    let extractedWord;
-    if (wordVariants.length > 0) {
-      extractedWord = wordVariants[0];
-      console.log(`Selected valid variant: "${extractedWord}" (${countGraphemes(extractedWord)} graphemes)`);
-    } else {
-      // Fallback: try first word part and validate
-      const fallbackWord = wordData.word.split(/[\s,\(]/)[0].trim();
-      const fallbackLength = countGraphemes(fallbackWord);
-      console.log(`Fallback word: "${fallbackWord}" (${fallbackLength} graphemes)`);
-      
-      if (fallbackLength === wordLength) {
-        extractedWord = fallbackWord;
-      } else {
-        console.error(`No valid ${wordLength}-letter variants found in: ${wordData.word}`);
-        throw new Error(`Word length mismatch: expected ${wordLength}, database entry has no matching variants`);
-      }
-    }
-    
-    // Final validation
-    const finalLength = countGraphemes(extractedWord);
-    if (finalLength !== wordLength) {
-      console.error(`Final validation failed: expected ${wordLength}, got ${finalLength} for word "${extractedWord}"`);
-      throw new Error(`Word length validation failed: ${extractedWord} has ${finalLength} letters, expected ${wordLength}`);
-    }
-    
-    console.log('Selected random word:', {
-      original: wordData.word,
-      extracted: extractedWord,
-      wordLength: countGraphemes(extractedWord)
-    });
-
-    return {
-      ...wordData,
-      word: extractedWord
-    } as WordleWord;
-
-  } catch (error) {
-    console.error('Error in getRandomWordMasterWord:', error);
-    throw error;
   }
+  
+  // If we get here, all attempts failed
+  throw new Error(`Failed to find valid word after ${maxAttempts} attempts`);
 }
 
 // Validate if a word exists in the dictionary
