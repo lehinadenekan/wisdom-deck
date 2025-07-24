@@ -170,3 +170,26 @@ Please confirm your understanding of:
 9. **✅ COMPLETED:** Comprehensive testing phase with all systems operational
 
 The project is now fully functional and deployed with professional branding throughout. All Phase 1 & 2 changes have been completed successfully, including comprehensive testing. Any new development should maintain the high quality standards and comprehensive testing approach that has been established.
+
+---
+
+## Latest Changes (June 2024)
+
+- **Navigation:**
+  - Single ConditionalNavbar is used for all pages; no duplicate navbars.
+  - Mobile menu no longer includes 'Back to Wisdom Deck'.
+  - All game actions in the mobile and desktop navbars use emoji icons (🎮 New Game, 📊 Statistics, ⚙️ Settings, ❓ Help).
+  - Desktop and mobile navbars are visually consistent and compact.
+- **Hint Toggles:**
+  - Tonal Accents, Part of Speech, and English Translation toggles are only accessible via the Settings modal (not in the navbar or as a separate bar).
+  - Settings modal is the only place to toggle hint options for both desktop and mobile.
+- **Game Layout:**
+  - Ultra-compact layout: minimal spacing, keyboard always visible on mobile, consistent 4px spacing between header, grid, and keyboard.
+  - Footer/logo is always visible, with a tiny logo on mobile and no copyright text.
+- **Accessibility & UX:**
+  - All navigation and toggles are accessible and touch-friendly.
+  - No duplicate or unnecessary navigation elements remain.
+
+---
+
+This section should be kept up to date as further changes are made.

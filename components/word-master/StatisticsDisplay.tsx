@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { usePreferences } from '@/hooks/usePreferences';
 
 interface StatisticsDisplayProps {
@@ -11,6 +12,22 @@ export default function StatisticsDisplay({ isOpen, onClose }: StatisticsDisplay
   const { preferences, resetStatistics } = usePreferences();
   const { statistics } = preferences;
 
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+    }
+    
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const winPercentage = statistics.gamesPlayed > 0 
@@ -20,8 +37,14 @@ export default function StatisticsDisplay({ isOpen, onClose }: StatisticsDisplay
   const maxGuesses = Math.max(...Object.values(statistics.guessDistribution));
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-gray-800 text-white p-6 rounded-lg shadow-xl w-full max-w-md mx-4">
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-gray-800 text-white p-6 rounded-lg shadow-xl w-full max-w-md mx-4"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Statistics</h2>
           <button

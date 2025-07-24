@@ -9,9 +9,21 @@ interface GamePageNavbarProps {
   onHelp?: () => void;
   onBack?: () => void;
   onStats?: () => void;
+  onNewGame?: () => void;
+  showTonalAccents?: boolean;
+  setShowTonalAccents?: (show: boolean) => void;
+  showPartOfSpeech?: boolean;
+  setShowPartOfSpeech?: (show: boolean) => void;
+  showEnglishTranslation?: boolean;
+  setShowEnglishTranslation?: (show: boolean) => void;
 }
 
-const ConditionalNavbar: React.FC<GamePageNavbarProps> = ({ onSettings, onHelp, onBack, onStats }) => {
+const ConditionalNavbar: React.FC<GamePageNavbarProps> = ({
+  onSettings, onHelp, onBack, onStats, onNewGame,
+  showTonalAccents, setShowTonalAccents,
+  showPartOfSpeech, setShowPartOfSpeech,
+  showEnglishTranslation, setShowEnglishTranslation
+}) => {
   const pathname = usePathname();
   const isGamePage = pathname === '/yoruba-word-master';
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -63,7 +75,7 @@ const ConditionalNavbar: React.FC<GamePageNavbarProps> = ({ onSettings, onHelp, 
   // Game Page Navbar
   return (
     <header className="bg-gray-900 shadow-md relative">
-      <nav className="container mx-auto px-6 py-4">
+      <nav className="container mx-auto px-2 py-2">
         <div className="flex justify-between items-center">
           {/* Back to Wisdom Deck */}
           <button
@@ -73,19 +85,20 @@ const ConditionalNavbar: React.FC<GamePageNavbarProps> = ({ onSettings, onHelp, 
           >
             <span className="mr-1">←</span> Back to Wisdom Deck
           </button>
-          <div className="hidden md:flex items-center space-x-4">
-            <button onClick={onStats} className="text-gray-300 hover:text-blue-400 min-h-[44px] px-2 flex items-center" aria-label="View statistics">
-              <BarChart3 size={22} className="mr-1" /> Statistics
+          <div className="hidden md:flex items-center space-x-2">
+            <button onClick={onNewGame} className="text-gray-300 hover:text-blue-400 min-h-[44px] px-2 flex items-center text-sm" aria-label="New Game">
+              <span className="mr-1">🎮</span> New Game
             </button>
-            <button onClick={onSettings} className="text-gray-300 hover:text-blue-400 min-h-[44px] px-2 flex items-center" aria-label="Settings">
-              <SettingsIcon size={22} className="mr-1" /> Settings
+            <button onClick={onStats} className="text-gray-300 hover:text-blue-400 min-h-[44px] px-2 flex items-center text-sm" aria-label="View statistics">
+              <span className="mr-1">📊</span> Statistics
             </button>
-            <button onClick={onHelp} className="text-gray-300 hover:text-blue-400 min-h-[44px] px-2 flex items-center" aria-label="Help">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              Help
+            <button onClick={onSettings} className="text-gray-300 hover:text-blue-400 min-h-[44px] px-2 flex items-center text-sm" aria-label="Settings">
+              <span className="mr-1">⚙️</span> Settings
             </button>
+            <button onClick={onHelp} className="text-gray-300 hover:text-blue-400 min-h-[44px] px-2 flex items-center text-sm" aria-label="Help">
+              <span className="mr-1">❓</span> Help
+            </button>
+            {/* Toggles moved to Settings modal */}
           </div>
           <button
             onClick={toggleMobileMenu}
@@ -105,21 +118,19 @@ const ConditionalNavbar: React.FC<GamePageNavbarProps> = ({ onSettings, onHelp, 
         {isMobileMenuOpen && (
           <div className="md:hidden mt-4 pb-4 border-t border-gray-700">
             <div className="flex flex-col space-y-3 pt-4">
-              <button onClick={() => { closeMobileMenu(); onStats && onStats(); }} className="text-gray-200 hover:text-blue-400 py-2 px-3 rounded-lg hover:bg-gray-800 text-base font-medium min-h-[44px] flex items-center">
-                <BarChart3 size={20} className="mr-2" /> Statistics
+              <button onClick={() => { onNewGame && onNewGame(); closeMobileMenu(); }} className="text-white hover:text-yellow-300 py-2 px-3 rounded-lg hover:bg-gray-800 text-base font-medium min-h-[44px] flex items-center">
+                <span className="mr-1">🎮</span> New Game
               </button>
-              <button onClick={() => { closeMobileMenu(); onSettings && onSettings(); }} className="text-gray-200 hover:text-blue-400 py-2 px-3 rounded-lg hover:bg-gray-800 text-base font-medium min-h-[44px] flex items-center">
-                <SettingsIcon size={20} className="mr-2" /> Settings
+              <button onClick={() => { onStats && onStats(); closeMobileMenu(); }} className="text-white hover:text-yellow-300 py-2 px-3 rounded-lg hover:bg-gray-800 text-base font-medium min-h-[44px] flex items-center">
+                <span className="mr-1">📊</span> Statistics
               </button>
-              <button onClick={() => { closeMobileMenu(); onHelp && onHelp(); }} className="text-gray-200 hover:text-blue-400 py-2 px-3 rounded-lg hover:bg-gray-800 text-base font-medium min-h-[44px] flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Help
+              <button onClick={() => { onSettings && onSettings(); closeMobileMenu(); }} className="text-white hover:text-yellow-300 py-2 px-3 rounded-lg hover:bg-gray-800 text-base font-medium min-h-[44px] flex items-center">
+                <span className="mr-1">⚙️</span> Settings
               </button>
-              <button onClick={() => { closeMobileMenu(); onBack && onBack(); }} className="text-gray-200 hover:text-blue-400 py-2 px-3 rounded-lg hover:bg-gray-800 text-base font-medium min-h-[44px] flex items-center">
-                <span className="mr-2">←</span> Back to Wisdom Deck
+              <button onClick={() => { onHelp && onHelp(); closeMobileMenu(); }} className="text-white hover:text-yellow-300 py-2 px-3 rounded-lg hover:bg-gray-800 text-base font-medium min-h-[44px] flex items-center">
+                <span className="mr-1">❓</span> Help
               </button>
+              {/* Toggle options for hints */}
             </div>
           </div>
         )}

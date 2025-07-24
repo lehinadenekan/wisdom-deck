@@ -5,6 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "dev:force": "PORT=3000 next dev",
+    "dev:clean": "rm -rf .next && npm run dev",
+    "cache:clear": "rm -rf .next && rm -rf node_modules/.cache",
+    "reset:dev": "rm -rf .next && rm -rf node_modules && npm install && npm run dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -37,6 +40,6 @@
     "eslint-config-next": "15.4.2",
     "postcss": "^8.4.33",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "typescript": "5.8.3"
   }
 }

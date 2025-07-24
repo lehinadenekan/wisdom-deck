@@ -253,3 +253,26 @@ The project is now production-ready with a robust testing pipeline, excellent ac
 ### Assets
 
 - `public/wisdom-deck-logo.png` - Wisdom Deck logo (1024x1024px, displayed at 120x120px)
+
+---
+
+## Latest Changes (June 2024)
+
+- **Navigation:**
+  - Single ConditionalNavbar is used for all pages; no duplicate navbars.
+  - Mobile menu no longer includes 'Back to Wisdom Deck'.
+  - All game actions in the mobile and desktop navbars use emoji icons (🎮 New Game, 📊 Statistics, ⚙️ Settings, ❓ Help).
+  - Desktop and mobile navbars are visually consistent and compact.
+- **Hint Toggles:**
+  - Tonal Accents, Part of Speech, and English Translation toggles are only accessible via the Settings modal (not in the navbar or as a separate bar).
+  - Settings modal is the only place to toggle hint options for both desktop and mobile.
+- **Game Layout:**
+  - Ultra-compact layout: minimal spacing, keyboard always visible on mobile, consistent 4px spacing between header, grid, and keyboard.
+  - Footer/logo is always visible, with a tiny logo on mobile and no copyright text.
+- **Accessibility & UX:**
+  - All navigation and toggles are accessible and touch-friendly.
+  - No duplicate or unnecessary navigation elements remain.
+
+---
+
+This section should be kept up to date as further changes are made.

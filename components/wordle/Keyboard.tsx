@@ -4,6 +4,7 @@ import { KeyboardStatus } from '@/hooks/useWordMaster';
 interface KeyboardProps {
   onKeyPress: (key: string) => void;
   keyboardStatus: KeyboardStatus;
+  className?: string;
 }
 
 // Create a lowercase to uppercase map for easier lookup
@@ -32,7 +33,7 @@ const yorubaKeyboardLayout = [
   ['t', 'u', 'w', 'y', 'Enter', 'Backspace']
 ].map(row => row.map(key => key.normalize('NFC')));
 
-const Keyboard: React.FC<KeyboardProps> = ({ onKeyPress, keyboardStatus }) => {
+const Keyboard: React.FC<KeyboardProps> = ({ onKeyPress, keyboardStatus, className }) => {
   const [uppercaseVowelMap, setUppercaseVowelMap] = useState<Map<string, string[]>>(new Map());
   const [activeVowelKey, setActiveVowelKey] = useState<string | null>(null);
   const keyboardRef = useRef<HTMLDivElement>(null);
@@ -103,9 +104,9 @@ const Keyboard: React.FC<KeyboardProps> = ({ onKeyPress, keyboardStatus }) => {
   }, []);
 
   return (
-    <div ref={keyboardRef} className="w-full max-w-2xl mt-2">
+    <div ref={keyboardRef} className={`w-full px-1 sm:max-w-2xl ${className || ''}`}>
       {yorubaKeyboardLayout.map((row, rowIndex) => (
-        <div key={rowIndex} className="flex justify-center gap-0.5 sm:gap-1 mb-1 sm:mb-2">
+        <div key={rowIndex} className="flex justify-center gap-0.5 sm:gap-1 mb-0.5 sm:mb-2">
           {row.map((key) => {
             const normalizedKey = key.normalize('NFC');
             const baseVowel = keyToVowelMap[normalizedKey];
@@ -116,7 +117,7 @@ const Keyboard: React.FC<KeyboardProps> = ({ onKeyPress, keyboardStatus }) => {
               <div key={normalizedKey} className="relative flex-1">
                 <button
                   onClick={() => handleKeyClick(normalizedKey)}
-                  className={`h-10 sm:h-14 w-full rounded hover:bg-gray-600 flex items-center justify-center text-sm sm:text-lg font-bold uppercase p-1
+                  className={`h-8 sm:h-14 w-full rounded hover:bg-gray-600 flex items-center justify-center text-xs sm:text-lg font-bold uppercase p-0.5 sm:p-1
                     ${getKeyClass(normalizedKey)}
                   `}
                 >
