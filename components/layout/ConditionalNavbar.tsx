@@ -96,7 +96,7 @@ const ConditionalNavbar: React.FC<GamePageNavbarProps> = ({
               <span className="mr-1">⚙️</span> Settings
             </button>
             <button onClick={onHelp} className="text-gray-300 hover:text-blue-400 min-h-[44px] px-2 flex items-center text-sm" aria-label="Help">
-              <span className="mr-1">❓</span> Help
+              <span className="mr-1">❓</span> Help & Hints
             </button>
             {/* Toggles moved to Settings modal */}
           </div>
@@ -128,7 +128,7 @@ const ConditionalNavbar: React.FC<GamePageNavbarProps> = ({
                 <span className="mr-1">⚙️</span> Settings
               </button>
               <button onClick={() => { onHelp && onHelp(); closeMobileMenu(); }} className="text-white hover:text-yellow-300 py-2 px-3 rounded-lg hover:bg-gray-800 text-base font-medium min-h-[44px] flex items-center">
-                <span className="mr-1">❓</span> Help
+                <span className="mr-1">❓</span> Help & Hints
               </button>
               {/* Toggle options for hints */}
             </div>

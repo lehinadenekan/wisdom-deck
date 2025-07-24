@@ -5,7 +5,7 @@ import GameBoard from '@/components/wordle/GameBoard';
 import Keyboard from '@/components/wordle/Keyboard';
 import useWordMaster from '@/hooks/useWordMaster';
 import GameEndModal from '@/components/wordle/GameEndModal';
-import HowToPlayModal from '@/components/wordle/HowToPlayModal';
+import HelpModal from '@/components/wordle/HelpModal';
 import HintSystem from '@/components/wordle/HintSystem';
 import SettingsPanel from '@/components/word-master/SettingsPanel';
 import SettingsButton from '@/components/word-master/SettingsButton';
@@ -41,6 +41,7 @@ const YorubaWordlePage = () => {
   const [showEnglishTranslation, setShowEnglishTranslation] = useState(false);
   const [showNewGameConfirmation, setShowNewGameConfirmation] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [isWordRevealed, setIsWordRevealed] = useState(false);
 
   useEffect(() => {
     if (isGameWon || isGameLost) {
@@ -52,6 +53,7 @@ const YorubaWordlePage = () => {
 
   const resetGame = async () => {
     await startNewGame();
+    setIsWordRevealed(false);
   }
 
   // Handlers for navbar
@@ -66,10 +68,16 @@ const YorubaWordlePage = () => {
   const handleConfirmNewGame = () => {
     startNewGame();
     setShowNewGameConfirmation(false);
+    setIsWordRevealed(false);
   };
   
   const handleSettingsApplied = () => {
     setShowToast(true);
+  };
+
+  const handleRevealWord = () => {
+    setIsWordRevealed(true);
+    setIsHelpOpen(false);
   };
 
   return (
@@ -97,7 +105,12 @@ const YorubaWordlePage = () => {
         turn={turn}
         onReset={resetGame}
       />
-      <HowToPlayModal isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />
+      <HelpModal 
+        isOpen={isHelpOpen} 
+        onClose={() => setIsHelpOpen(false)} 
+        solution={solution}
+        revealWord={handleRevealWord}
+      />
       <SettingsPanel 
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
@@ -156,6 +169,13 @@ const YorubaWordlePage = () => {
                 {showEnglishTranslation && solutionInfo.englishTranslation && (
                   <p><strong>English:</strong> {solutionInfo.englishTranslation}</p>
                 )}
+              </div>
+            )}
+
+            {/* Revealed Word Display */}
+            {isWordRevealed && (
+              <div className="text-center text-sm text-red-400 px-2 mt-2 bg-red-900 bg-opacity-20 rounded-lg py-2">
+                <p><strong>🎯 Revealed Solution:</strong> <span className="font-mono text-lg">{solution}</span></p>
               </div>
             )}
           </div>
