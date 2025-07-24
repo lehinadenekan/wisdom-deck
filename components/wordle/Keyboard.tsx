@@ -106,7 +106,7 @@ const Keyboard: React.FC<KeyboardProps> = ({ onKeyPress, keyboardStatus, classNa
   return (
     <div ref={keyboardRef} className={`w-full px-1 sm:max-w-2xl ${className || ''}`}>
       {yorubaKeyboardLayout.map((row, rowIndex) => (
-        <div key={rowIndex} className="flex justify-center gap-0.5 sm:gap-1 mb-0.5 sm:mb-2">
+        <div key={rowIndex} className="flex justify-center gap-1 sm:gap-1.5 mb-1 sm:mb-3">
           {row.map((key) => {
             const normalizedKey = key.normalize('NFC');
             const baseVowel = keyToVowelMap[normalizedKey];
@@ -117,7 +117,7 @@ const Keyboard: React.FC<KeyboardProps> = ({ onKeyPress, keyboardStatus, classNa
               <div key={normalizedKey} className="relative flex-1">
                 <button
                   onClick={() => handleKeyClick(normalizedKey)}
-                  className={`h-8 sm:h-14 w-full rounded hover:bg-gray-600 flex items-center justify-center text-xs sm:text-lg font-bold uppercase p-0.5 sm:p-1
+                  className={`h-12 sm:h-16 w-full rounded hover:bg-gray-600 flex items-center justify-center text-sm sm:text-xl font-bold uppercase p-1 sm:p-2
                     ${getKeyClass(normalizedKey)}
                   `}
                 >
@@ -135,7 +135,7 @@ const Keyboard: React.FC<KeyboardProps> = ({ onKeyPress, keyboardStatus, classNa
                         <button
                           key={normalizedVariant}
                           onClick={() => handleVariantClick(normalizedVariant)}
-                          className={`w-12 h-12 rounded hover:bg-blue-500 text-white flex items-center justify-center text-2xl ${getKeyClass(normalizedVariant.toLowerCase())}`}
+                          className={`w-14 h-14 rounded hover:bg-blue-500 text-white flex items-center justify-center text-3xl ${getKeyClass(normalizedVariant.toLowerCase())}`}
                         >
                           {normalizedVariant}
                         </button>
