@@ -376,3 +376,30 @@ The project is now production-ready with a robust testing pipeline, excellent ac
   - **Grammar Consistency:** Maintains correct grammar for all supported word lengths
 
 This section should be kept up to date as further changes are made.
+
+## Yoruba Word Master Walkthrough System (2024-06)
+
+### Features
+
+- **Interactive Walkthrough**: Uses React Joyride to guide users through all game features.
+- **Step Order**: Statistics is step 4, Settings is step 5, matching the latest UX requirements.
+- **Replay Options**:
+  - **Completion Modal**: After finishing the walkthrough, a modal appears with two options: "Take Walkthrough Again" (restarts the walkthrough) and "Start Playing" (closes modal, focuses game).
+  - **Help & Hints Modal**: Users can restart the walkthrough at any time from the Help modal via a subtle link/button.
+- **Mobile Optimisation**: All walkthrough elements and modals are mobile-friendly and styled with the purple brand theme.
+
+### Technical Implementation
+
+- **GameWalkthrough Component**: Externally controlled Joyride, correct step order, purple theme.
+- **WalkthroughCompletionModal**: Custom modal for replay/start options.
+- **HelpModal**: Accepts `onRestartWalkthrough` prop, renders a restart button in the rules section.
+- **Game Page**: Manages walkthrough state, shows/hides modal, passes restart function to HelpModal, and cleans up the walkthrough URL parameter.
+- **Linter Error**: TypeScript may warn that `useSearchParams()` is possibly null, but in Next.js App Router it is always defined. The code uses `searchParams!` or disables the warning.
+
+### User Experience
+
+- "How to Play" on the landing page triggers the walkthrough.
+- Walkthrough auto-starts, guides through all features in the correct order.
+- Completion modal appears at the end, offering replay or start.
+- Help modal allows restarting the walkthrough at any time.
+- All flows are mobile-optimised and visually consistent.

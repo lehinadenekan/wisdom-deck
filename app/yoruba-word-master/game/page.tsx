@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import GameBoard from '@/components/wordle/GameBoard';
 import Keyboard from '@/components/wordle/Keyboard';
 import useWordMaster from '@/hooks/useWordMaster';
@@ -19,7 +19,18 @@ import GameWalkthrough, { walkthroughSteps } from '@/components/walkthrough/Game
 import WalkthroughCompletionModal from '@/components/walkthrough/WalkthroughCompletionModal';
 import { useSearchParams, useRouter } from 'next/navigation';
 
-const YorubaWordlePage = () => {
+// Loading component for Suspense fallback
+const LoadingFallback = () => (
+  <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+    <div className="text-center">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500 mx-auto mb-4"></div>
+      <p className="text-gray-400">Loading game...</p>
+    </div>
+  </div>
+);
+
+// Component that uses useSearchParams - this needs to be wrapped in Suspense
+const YorubaWordMasterGame = () => {
   const { 
     solution,
     solutionInfo, 
@@ -50,7 +61,7 @@ const YorubaWordlePage = () => {
 
   const searchParams = useSearchParams();
   const router = useRouter();
-  const walkthroughParam = searchParams.get('walkthrough'); // searchParams is never null in Next.js app router
+  const walkthroughParam = searchParams.get('walkthrough');
   const [walkthroughRun, setWalkthroughRun] = useState(false);
   const [walkthroughStepIndex, setWalkthroughStepIndex] = useState(0);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
@@ -249,7 +260,7 @@ const YorubaWordlePage = () => {
             {/* Revealed Word Display */}
             {isWordRevealed && (
               <div className="text-center text-sm text-red-400 px-2 mt-2 bg-red-900 bg-opacity-20 rounded-lg py-2">
-                <p><strong>🎯 Revealed Solution:</strong> <span className="font-mono text-lg">{solution}</span></p>
+                <p><strong>Revealed Solution:</strong> <span className="font-mono text-lg">{solution}</span></p>
               </div>
             )}
           </div>
@@ -277,6 +288,15 @@ const YorubaWordlePage = () => {
         </footer>
       </div>
     </div>
+  );
+};
+
+// Main component that wraps the game in Suspense
+const YorubaWordlePage = () => {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <YorubaWordMasterGame />
+    </Suspense>
   );
 };
 
