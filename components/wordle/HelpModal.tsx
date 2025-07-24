@@ -16,6 +16,7 @@ interface HelpModalProps {
   revealWord?: () => void;
   turn?: number;
   wordLength?: number;
+  onRestartWalkthrough?: () => void;
 }
 
 const HelpModal: React.FC<HelpModalProps> = ({ 
@@ -26,7 +27,8 @@ const HelpModal: React.FC<HelpModalProps> = ({
   isWordRevealed, 
   revealWord, 
   turn = 0,
-  wordLength = 5
+  wordLength = 5,
+  onRestartWalkthrough
 }) => {
   const [activeTab, setActiveTab] = useState<'how-to-play' | 'need-help'>('how-to-play');
   const [showRevealConfirmation, setShowRevealConfirmation] = useState(false);
@@ -128,6 +130,19 @@ const HelpModal: React.FC<HelpModalProps> = ({
                   </div>
                 </div>
               </div>
+
+              {/* Restart Walkthrough Button */}
+              {onRestartWalkthrough && (
+                <div className="flex justify-center my-2">
+                  <button
+                    type="button"
+                    onClick={() => { onClose(); setTimeout(() => onRestartWalkthrough(), 300); }}
+                    className="inline-flex items-center text-purple-400 hover:text-purple-300 underline text-sm font-medium focus:outline-none"
+                  >
+                    🎯 Restart Walkthrough
+                  </button>
+                </div>
+              )}
 
               <hr className="border-gray-700"/>
 

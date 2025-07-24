@@ -25,7 +25,7 @@ const ConditionalNavbar: React.FC<GamePageNavbarProps> = ({
   showEnglishTranslation, setShowEnglishTranslation
 }) => {
   const pathname = usePathname();
-  const isGamePage = pathname === '/yoruba-word-master';
+  const isGamePage = pathname === '/yoruba-word-master/game';
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => setIsMobileMenuOpen((open) => !open);
@@ -86,16 +86,16 @@ const ConditionalNavbar: React.FC<GamePageNavbarProps> = ({
             <span className="mr-1">←</span> Back to Wisdom Deck
           </button>
           <div className="hidden md:flex items-center space-x-2">
-            <button onClick={onNewGame} className="text-gray-300 hover:text-blue-400 min-h-[44px] px-2 flex items-center text-sm" aria-label="New Game">
+            <button onClick={onNewGame} data-tour="new-game" className="text-gray-300 hover:text-blue-400 min-h-[44px] px-2 flex items-center text-sm" aria-label="New Game">
               <span className="mr-1">🎮</span> New Game
             </button>
-            <button onClick={onStats} className="text-gray-300 hover:text-blue-400 min-h-[44px] px-2 flex items-center text-sm" aria-label="View statistics">
+            <button onClick={onStats} data-tour="statistics" className="text-gray-300 hover:text-blue-400 min-h-[44px] px-2 flex items-center text-sm" aria-label="View statistics">
               <span className="mr-1">📊</span> Statistics
             </button>
-            <button onClick={onSettings} className="text-gray-300 hover:text-blue-400 min-h-[44px] px-2 flex items-center text-sm" aria-label="Settings">
+            <button onClick={onSettings} data-tour="settings" className="text-gray-300 hover:text-blue-400 min-h-[44px] px-2 flex items-center text-sm" aria-label="Settings">
               <span className="mr-1">⚙️</span> Settings
             </button>
-            <button onClick={onHelp} className="text-gray-300 hover:text-blue-400 min-h-[44px] px-2 flex items-center text-sm" aria-label="Help">
+            <button onClick={onHelp} data-tour="help" className="text-gray-300 hover:text-blue-400 min-h-[44px] px-2 flex items-center text-sm" aria-label="Help">
               <span className="mr-1">❓</span> Help & Hints
             </button>
             {/* Toggles moved to Settings modal */}

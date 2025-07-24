@@ -1,215 +1,56 @@
-'use client';
-
-import React, { useState, useEffect } from 'react';
-import GameBoard from '@/components/wordle/GameBoard';
-import Keyboard from '@/components/wordle/Keyboard';
-import useWordMaster from '@/hooks/useWordMaster';
-import GameEndModal from '@/components/wordle/GameEndModal';
-import HelpModal from '@/components/wordle/HelpModal';
-import HintSystem from '@/components/wordle/HintSystem';
-import SettingsPanel from '@/components/word-master/SettingsPanel';
-import SettingsButton from '@/components/word-master/SettingsButton';
-import StatisticsDisplay from '@/components/word-master/StatisticsDisplay';
-import { usePreferences } from '@/hooks/usePreferences';
+import React from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
-import ConditionalNavbar from '@/components/layout/ConditionalNavbar';
-import ConfirmationModal from '@/components/word-master/ConfirmationModal';
-import ToastNotification from '@/components/word-master/ToastNotification';
+import GamePreview from '@/components/landing/GamePreview';
 
-const YorubaWordlePage = () => {
-  const { 
-    solution,
-    solutionInfo, 
-    guesses, 
-    currentGuess, 
-    turn, 
-    handleKeyPress, 
-    keyboardStatus,
-    errorMessage,
-    isGameWon,
-    isGameLost,
-    startNewGame,
-    startNewGameWithLength,
-    wordLength
-  } = useWordMaster();
+const featureHighlights = [
+  { icon: '🎯', text: 'Choose from 3, 4, 5, 6, or 7 letter words' },
+  { icon: '💡', text: 'Smart hints and tonal accent helpers' },
+  { icon: '📊', text: 'Detailed statistics and progress tracking' },
+  { icon: '🎮', text: 'Mobile-optimised gaming experience' },
+];
 
-  const { updateStatistics } = usePreferences();
-
-  const [isHelpOpen, setIsHelpOpen] = useState(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isStatsOpen, setIsStatsOpen] = useState(false);
-  const [showTonalAccents, setShowTonalAccents] = useState(false);
-  const [showPartOfSpeech, setShowPartOfSpeech] = useState(false);
-  const [showEnglishTranslation, setShowEnglishTranslation] = useState(false);
-  const [showNewGameConfirmation, setShowNewGameConfirmation] = useState(false);
-  const [showToast, setShowToast] = useState(false);
-  const [isWordRevealed, setIsWordRevealed] = useState(false);
-
-  useEffect(() => {
-    if (isGameWon || isGameLost) {
-      const gameWon = isGameWon;
-      const guessCount = turn;
-      updateStatistics(gameWon, guessCount);
-    }
-  }, [isGameWon, isGameLost, turn, updateStatistics]);
-
-  const resetGame = async () => {
-    await startNewGame();
-    setIsWordRevealed(false);
-  }
-
-  // Handlers for navbar
-  const handleBack = () => {
-    window.location.href = 'https://www.wisdomdeck.online';
-  };
-  const handleSettings = () => setIsSettingsOpen(true);
-  const handleHelp = () => setIsHelpOpen(true);
-  const handleStats = () => setIsStatsOpen(true);
-  const handleNewGame = () => setShowNewGameConfirmation(true);
-  
-  const handleConfirmNewGame = () => {
-    startNewGame();
-    setShowNewGameConfirmation(false);
-    setIsWordRevealed(false);
-  };
-  
-  const handleSettingsApplied = () => {
-    setShowToast(true);
-  };
-
-  const handleRevealWord = () => {
-    setIsWordRevealed(true);
-    setIsHelpOpen(false);
-  };
-
+export default function YorubaWordMasterLanding() {
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <ConditionalNavbar 
-        onSettings={handleSettings}
-        onHelp={handleHelp}
-        onBack={handleBack}
-        onStats={handleStats}
-        onNewGame={handleNewGame}
-        showTonalAccents={showTonalAccents}
-        setShowTonalAccents={setShowTonalAccents}
-        showPartOfSpeech={showPartOfSpeech}
-        setShowPartOfSpeech={setShowPartOfSpeech}
-        showEnglishTranslation={showEnglishTranslation}
-        setShowEnglishTranslation={setShowEnglishTranslation}
-      />
-      
-      {/* Modals */}
-      <GameEndModal 
-        isOpen={isGameWon || isGameLost} 
-        isGameWon={isGameWon}
-        solution={solution}
-        guesses={guesses}
-        turn={turn}
-        onReset={resetGame}
-      />
-      <HelpModal 
-        isOpen={isHelpOpen} 
-        onClose={() => setIsHelpOpen(false)} 
-        solution={solution}
-        revealWord={handleRevealWord}
-        wordLength={wordLength}
-      />
-      <SettingsPanel 
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        onNewGame={startNewGame}
-        showTonalAccents={showTonalAccents}
-        setShowTonalAccents={setShowTonalAccents}
-        showPartOfSpeech={showPartOfSpeech}
-        setShowPartOfSpeech={setShowPartOfSpeech}
-        showEnglishTranslation={showEnglishTranslation}
-        setShowEnglishTranslation={setShowEnglishTranslation}
-        onSettingsApplied={handleSettingsApplied}
-        startNewGameWithLength={startNewGameWithLength}
-        currentWordLength={wordLength}
-      />
-      <StatisticsDisplay 
-        isOpen={isStatsOpen}
-        onClose={() => setIsStatsOpen(false)}
-      />
-      <ConfirmationModal
-        isOpen={showNewGameConfirmation}
-        onConfirm={handleConfirmNewGame}
-        onCancel={() => setShowNewGameConfirmation(false)}
-        title="Start New Game?"
-        message="Your current progress will be lost. Are you sure you want to start a new game?"
-      />
-      <ToastNotification
-        isVisible={showToast}
-        message="Settings applied successfully!"
-        onClose={() => setShowToast(false)}
-      />
-
-      {/* Game Content */}
-      <div className="flex flex-col items-center h-screen bg-gray-900 text-white overflow-hidden pt-16">
-        {/* Game Title Header */}
-        <header className="w-full text-center py-1 px-2 mb-8">
-          <h1 className="text-lg sm:text-4xl font-bold tracking-wide uppercase mb-2">Yorùbá Word Master</h1>
-          <p className="text-xs sm:text-lg text-gray-400 hidden sm:block">A Yorùbá Word Guessing Game</p>
-        </header>
-        
-        {/* Main Game Area */}
-        <main className="flex flex-col items-center px-1 w-full min-h-0">
-          <div className="flex flex-col items-center w-full">
-            <GameBoard 
-              guesses={guesses} 
-              currentGuess={currentGuess} 
-              turn={turn} 
-              solution={solution} 
-              showTonalAccents={showTonalAccents}
-              wordLength={wordLength}
-              className="mb-2 sm:mb-4"
-            />
-            
-            {/* Inline Hints Display */}
-            {(showPartOfSpeech || showEnglishTranslation) && (
-              <div className="text-center text-sm text-gray-300 px-2 mt-2">
-                {showPartOfSpeech && solutionInfo.partOfSpeech && (
-                  <p><strong>Part of Speech:</strong> {solutionInfo.partOfSpeech}</p>
-                )}
-                {showEnglishTranslation && solutionInfo.englishTranslation && (
-                  <p><strong>English:</strong> {solutionInfo.englishTranslation}</p>
-                )}
-              </div>
-            )}
-
-            {/* Revealed Word Display */}
-            {isWordRevealed && (
-              <div className="text-center text-sm text-red-400 px-2 mt-2 bg-red-900 bg-opacity-20 rounded-lg py-2">
-                <p><strong>🎯 Revealed Solution:</strong> <span className="font-mono text-lg">{solution}</span></p>
-              </div>
-            )}
-          </div>
-          
-          {/* Keyboard */}
-          <div className="mt-4 mb-4">
-            <Keyboard onKeyPress={handleKeyPress} keyboardStatus={keyboardStatus} />
-          </div>
-        </main>
-
-        {/* Footer */}
-        <footer className="hidden sm:block w-full max-w-lg text-center py-2 mt-4">
-          <div className="flex items-center justify-center mb-3">
-            <a href="https://www.wisdomdeck.online">
-              <Image 
-                src="/wisdom-deck-logo.png" 
-                alt="Wisdom Deck Logo" 
-                width={120} 
-                height={120}
-                className="object-contain invert"
-              />
-            </a>
-          </div>
-          <p className="text-sm text-gray-500">© {new Date().getFullYear()} Wisdom Deck. All Rights Reserved.</p>
-        </footer>
+    <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900">
+      {/* Header */}
+      <header className="w-full flex items-center justify-between px-4 py-4">
+        <Link href="/" className="text-purple-700 font-bold text-sm hover:underline" aria-label="Back to Wisdom Deck">
+          ← Back to Wisdom Deck
+        </Link>
+      </header>
+      {/* Hero Section */}
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-10 sm:py-16">
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-purple-700 mb-2 text-center">Yorùbá Word Master</h1>
+        <h2 className="text-lg sm:text-2xl text-gray-700 mb-4 text-center">A Yorùbá Word Guessing Game</h2>
+        <p className="text-base sm:text-lg text-gray-600 mb-6 text-center max-w-xl">
+          Guess the Yorùbá word within 6 attempts. Test your knowledge while learning new vocabulary.
+        </p>
+        <GamePreview />
+        {/* Feature Highlights */}
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg w-full">
+          {featureHighlights.map((feature, i) => (
+            <div key={i} className="flex items-center gap-3 bg-purple-50 rounded-lg px-4 py-3 shadow">
+              <span className="text-2xl" aria-hidden="true">{feature.icon}</span>
+              <span className="text-base text-gray-800">{feature.text}</span>
+            </div>
+          ))}
+        </div>
+        {/* CTA Buttons */}
+        <div className="mt-10 flex flex-col sm:flex-row gap-4 w-full max-w-md">
+          <Link href="/yoruba-word-master/game" className="flex-1 min-h-14 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg flex items-center justify-center text-lg shadow transition-colours duration-150 focus:outline-none focus:ring-2 focus:ring-purple-400" aria-label="Play Yorùbá Word Master">
+            Play Now
+          </Link>
+          <Link href="/yoruba-word-master/game?walkthrough=true" className="flex-1 min-h-14 bg-white border border-purple-600 text-purple-700 font-bold rounded-lg flex items-center justify-center text-lg shadow transition-colours duration-150 hover:bg-purple-50 focus:outline-none focus:ring-2 focus:ring-purple-400" aria-label="How to Play Yorùbá Word Master">
+            How to Play
+          </Link>
+        </div>
       </div>
+      {/* Footer */}
+      <footer className="w-full flex flex-col items-center justify-center py-6 bg-gray-100 mt-auto">
+        <Image src="/wisdom-deck-logo.png" alt="Wisdom Deck Logo" width={120} height={120} className="object-contain mb-2" />
+        <p className="text-xs text-gray-500">© {new Date().getFullYear()} Wisdom Deck. Celebrating Yorùbá language and culture.</p>
+      </footer>
     </div>
   );
-};
-
-export default YorubaWordlePage;
+} 
