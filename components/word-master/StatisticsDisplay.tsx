@@ -113,7 +113,7 @@ export default function StatisticsDisplay({ isOpen, onClose }: StatisticsDisplay
                 resetStatistics();
               }
             }}
-            className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded"
+            className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded"
           >
             Reset
           </button>

@@ -37,7 +37,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ guesses, currentGuess, turn, solu
                     key={colIndex}
                     className={`w-10 h-10 sm:w-16 sm:h-16 border border-gray-600 flex items-center justify-center text-sm sm:text-3xl font-bold uppercase
                       ${tile.status === 'correct' ? 'bg-green-500 border-green-500' : ''}
-                      ${tile.status === 'present' ? 'bg-yellow-500 border-yellow-500' : ''}
+                      ${tile.status === 'present' ? 'bg-purple-500 border-purple-500' : ''}
                       ${tile.status === 'absent' ? 'bg-gray-700 border-gray-700' : ''}
                     `}
                   >
@@ -84,7 +84,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ guesses, currentGuess, turn, solu
             const accent = getDiacritic(char);
             return (
               <div key={index} className="w-10 h-10 sm:w-16 sm:h-16 flex items-start justify-center">
-                <span className="text-sm sm:text-3xl text-yellow-400 font-semibold">
+                <span className="text-sm sm:text-3xl text-purple-400 font-semibold">
                   {accent}
                 </span>
               </div>

@@ -81,7 +81,7 @@ const HelpModal: React.FC<HelpModalProps> = ({
             onClick={() => setActiveTab('how-to-play')}
             className={`px-4 py-2 font-medium transition-colors ${
               activeTab === 'how-to-play' 
-                ? 'text-white border-b-2 border-blue-500' 
+                ? 'text-white border-b-2 border-purple-500' 
                 : 'text-gray-400 hover:text-white'
             }`}
           >
@@ -91,7 +91,7 @@ const HelpModal: React.FC<HelpModalProps> = ({
             onClick={() => setActiveTab('need-help')}
             className={`px-4 py-2 font-medium transition-colors ${
               activeTab === 'need-help' 
-                ? 'text-white border-b-2 border-blue-500' 
+                ? 'text-white border-b-2 border-purple-500' 
                 : 'text-gray-400 hover:text-white'
             }`}
           >
@@ -102,7 +102,7 @@ const HelpModal: React.FC<HelpModalProps> = ({
         {/* Tab Content */}
         {activeTab === 'how-to-play' && (
           <div className="space-y-5 text-justify">
-            <p className="text-center text-lg">Guess the secret 5-letter <strong className="text-yellow-400">Yorùbá</strong> word in six tries.</p>
+            <p className="text-center text-lg">Guess the secret 5-letter <strong className="text-purple-400">Yorùbá</strong> word in six tries.</p>
 
             <hr className="border-gray-700"/>
 
@@ -114,7 +114,7 @@ const HelpModal: React.FC<HelpModalProps> = ({
                   <p><strong className="text-white">Correct:</strong> The letter is in the word and in the correct spot.</p>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-yellow-500 flex items-center justify-center text-2xl font-bold text-white rounded-md">B</div>
+                  <div className="w-10 h-10 bg-purple-500 flex items-center justify-center text-2xl font-bold text-white rounded-md">B</div>
                   <p><strong className="text-white">Present:</strong> The letter is in the word but in the wrong spot.</p>
                 </div>
                 <div className="flex items-center gap-4">
@@ -130,7 +130,7 @@ const HelpModal: React.FC<HelpModalProps> = ({
               <h3 className="font-bold text-xl mb-3 text-white">Àmì Ohùn (Accents Are Key)</h3>
               <p className="mb-2">In Yorùbá, accents change a word's meaning! (e.g., <code className="bg-gray-700 px-1 rounded">oko</code> = farm, <code className="bg-gray-700 px-1 rounded">ọkọ</code> = husband, <code className="bg-gray-700 px-1 rounded">ọkọ́</code> = spear).</p>
               <ul className="list-disc list-outside space-y-1 pl-5">
-                <li>To type an accented vowel, <strong className="text-yellow-400">press and hold</strong> it on the on-screen keyboard to see its variations.</li>
+                <li>To type an accented vowel, <strong className="text-purple-400">press and hold</strong> it on the on-screen keyboard to see its variations.</li>
                 <li>The unique letters <code className="bg-gray-700 px-1 rounded">ẹ</code>, <code className="bg-gray-700 px-1 rounded">ọ</code>, and <code className="bg-gray-700 px-1 rounded">ṣ</code> have their own keys.</li>
               </ul>
             </div>
@@ -140,7 +140,7 @@ const HelpModal: React.FC<HelpModalProps> = ({
             <div>
               <h3 className="font-bold text-xl mb-3 text-white">Ìrànlọ́wọ́ (Need a Clue?)</h3>
               <ul className="list-disc list-outside space-y-1 pl-5">
-                <li>For an easier game, toggle on <strong className="text-yellow-400">'Show tonal accents'</strong> *before* you start to see the word's accents.</li>
+                <li>For an easier game, toggle on <strong className="text-purple-400">'Show tonal accents'</strong> *before* you start to see the word's accents.</li>
                 <li>After your first guess, you can use the other hint toggles to reveal the word's translation and more.</li>
                 <li>If you're really stuck, check the "Need Help?" tab to reveal the word and learn its meaning.</li>
               </ul>
@@ -155,21 +155,21 @@ const HelpModal: React.FC<HelpModalProps> = ({
                 <div className="text-center">
                   <h3 className="text-xl font-bold text-white mb-2">Stuck on this word?</h3>
                   <p className="text-gray-300 mb-4">
-                    You've made <strong className="text-yellow-400">{turn}</strong> out of 6 guesses.
+                    You've made <strong className="text-purple-400">{turn}</strong> out of 6 guesses.
                   </p>
                   <p className="text-gray-400 mb-6">
                     Don't worry! You can reveal the word to learn its meaning and try again.
                   </p>
                 </div>
 
-                <div className="bg-yellow-900 bg-opacity-30 border border-yellow-600 rounded-lg p-4">
-                  <h4 className="font-medium mb-2 text-yellow-200">Ready to learn?</h4>
-                  <p className="text-sm text-yellow-300 mb-4">
+                <div className="bg-purple-900 bg-opacity-30 border border-purple-600 rounded-lg p-4">
+                  <h4 className="font-medium mb-2 text-purple-200">Ready to learn?</h4>
+                  <p className="text-sm text-purple-300 mb-4">
                     Revealing the word will end your current game and show you the solution with its meaning.
                   </p>
                   <button
                     onClick={() => setShowRevealConfirmation(true)}
-                    className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-4 rounded-lg transition-colors"
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition-colors"
                   >
                     Reveal the Word
                   </button>
@@ -200,7 +200,7 @@ const HelpModal: React.FC<HelpModalProps> = ({
                 <p className="text-gray-300">Ready for another word?</p>
                 <button
                   onClick={onClose}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+                  className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
                 >
                   Start New Game
                 </button>
@@ -223,7 +223,7 @@ const HelpModal: React.FC<HelpModalProps> = ({
                     </button>
                     <button
                       onClick={handleRevealWord}
-                      className="flex-1 px-4 py-2 bg-yellow-600 hover:bg-yellow-700 rounded-lg font-medium transition-colors"
+                      className="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium transition-colors"
                     >
                       Yes, Reveal
                     </button>
@@ -238,7 +238,7 @@ const HelpModal: React.FC<HelpModalProps> = ({
         <div className="mt-8 pt-6 border-t border-gray-700">
           <button
             onClick={onClose}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg transition-colors text-lg"
+            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition-colors text-lg"
           >
             Got it!
           </button>

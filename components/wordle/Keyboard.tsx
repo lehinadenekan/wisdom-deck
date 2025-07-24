@@ -66,7 +66,7 @@ const Keyboard: React.FC<KeyboardProps> = ({ onKeyPress, keyboardStatus, classNa
     const normalizedKey = key.normalize('NFC').toLowerCase();
     const status = keyboardStatus[normalizedKey];
     if (status === 'correct') return 'bg-green-500 text-white';
-    if (status === 'present') return 'bg-yellow-500 text-white';
+    if (status === 'present') return 'bg-purple-500 text-white';
     if (status === 'absent') return 'bg-gray-900 text-gray-500';
     return 'bg-gray-700 text-white';
   };
