@@ -53,15 +53,22 @@ const YorubaWordMasterGame = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [showTonalAccents, setShowTonalAccents] = useState(false);
-  const [showPartOfSpeech, setShowPartOfSpeech] = useState(false);
-  const [showEnglishTranslation, setShowEnglishTranslation] = useState(false);
+  const [showPartOfSpeech, setShowPartOfSpeech] = useState(() => {
+    const saved = typeof window !== 'undefined' ? localStorage.getItem('showPartOfSpeech') : null;
+    return saved !== null ? JSON.parse(saved) : true;
+  });
+  const [showEnglishTranslation, setShowEnglishTranslation] = useState(() => {
+    const saved = typeof window !== 'undefined' ? localStorage.getItem('showEnglishTranslation') : null;
+    return saved !== null ? JSON.parse(saved) : true;
+  });
   const [showNewGameConfirmation, setShowNewGameConfirmation] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [isWordRevealed, setIsWordRevealed] = useState(false);
 
   const searchParams = useSearchParams();
   const router = useRouter();
-  const walkthroughParam = searchParams.get('walkthrough');
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const walkthroughParam = searchParams!.get('walkthrough');
   const [walkthroughRun, setWalkthroughRun] = useState(false);
   const [walkthroughStepIndex, setWalkthroughStepIndex] = useState(0);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
@@ -137,6 +144,18 @@ const YorubaWordMasterGame = () => {
     setIsWordRevealed(true);
     setIsHelpOpen(false);
   };
+
+  // Save to localStorage when toggled
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('showPartOfSpeech', JSON.stringify(showPartOfSpeech));
+    }
+  }, [showPartOfSpeech]);
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('showEnglishTranslation', JSON.stringify(showEnglishTranslation));
+    }
+  }, [showEnglishTranslation]);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
