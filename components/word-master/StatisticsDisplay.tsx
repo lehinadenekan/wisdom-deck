@@ -42,65 +42,71 @@ export default function StatisticsDisplay({ isOpen, onClose }: StatisticsDisplay
       onClick={onClose}
     >
       <div 
-        className="bg-gray-800 text-white p-6 rounded-lg shadow-xl w-full max-w-md mx-4"
+        className="bg-gray-800 text-white rounded-lg shadow-xl w-full max-w-md mx-4 flex flex-col max-h-[75vh] sm:max-h-[80vh] min-h-[300px]"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Statistics</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-white"
-          >
-            ✕
-          </button>
-        </div>
-
-        {/* Summary Stats */}
-        <div className="grid grid-cols-4 gap-4 mb-6">
-          <div className="text-center">
-            <div className="text-2xl font-bold">{statistics.gamesPlayed}</div>
-            <div className="text-sm text-gray-400">Played</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold">{winPercentage}%</div>
-            <div className="text-sm text-gray-400">Win Rate</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold">{statistics.currentStreak}</div>
-            <div className="text-sm text-gray-400">Current</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold">{statistics.maxStreak}</div>
-            <div className="text-sm text-gray-400">Best</div>
+        {/* Fixed Header */}
+        <div className="flex-shrink-0 p-6 pb-0">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold">Statistics</h2>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-white"
+            >
+              ✕
+            </button>
           </div>
         </div>
 
-        {/* Guess Distribution */}
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-3">Guess Distribution</h3>
-          <div className="space-y-2">
-            {[1, 2, 3, 4, 5, 6].map(guess => {
-              const count = statistics.guessDistribution[guess];
-              const percentage = maxGuesses > 0 ? (count / maxGuesses) * 100 : 0;
-              return (
-                <div key={guess} className="flex items-center">
-                  <div className="w-4 text-center">{guess}</div>
-                  <div className="flex-1 mx-2 bg-gray-700 rounded">
-                    <div 
-                      className="bg-purple-600 h-6 rounded flex items-center justify-end pr-2"
-                      style={{ width: `${Math.max(percentage, 5)}%` }}
-                    >
-                      <span className="text-sm">{count}</span>
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto p-6 py-4" style={{ WebkitOverflowScrolling: 'touch' }}>
+          {/* Summary Stats */}
+          <div className="grid grid-cols-4 gap-4 mb-6">
+            <div className="text-center">
+              <div className="text-2xl font-bold">{statistics.gamesPlayed}</div>
+              <div className="text-sm text-gray-400">Played</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold">{winPercentage}%</div>
+              <div className="text-sm text-gray-400">Win Rate</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold">{statistics.currentStreak}</div>
+              <div className="text-sm text-gray-400">Current</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold">{statistics.maxStreak}</div>
+              <div className="text-sm text-gray-400">Best</div>
+            </div>
+          </div>
+
+          {/* Guess Distribution */}
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold mb-3">Guess Distribution</h3>
+            <div className="space-y-2">
+              {[1, 2, 3, 4, 5, 6].map(guess => {
+                const count = statistics.guessDistribution[guess];
+                const percentage = maxGuesses > 0 ? (count / maxGuesses) * 100 : 0;
+                return (
+                  <div key={guess} className="flex items-center">
+                    <div className="w-4 text-center">{guess}</div>
+                    <div className="flex-1 mx-2 bg-gray-700 rounded">
+                      <div 
+                        className="bg-purple-600 h-6 rounded flex items-center justify-end pr-2"
+                        style={{ width: `${Math.max(percentage, 5)}%` }}
+                      >
+                        <span className="text-sm">{count}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
 
-        {/* Actions */}
-        <div className="flex gap-3">
+        {/* Fixed Footer */}
+        <div className="flex-shrink-0 p-6 pt-4 flex gap-3">
           <button
             onClick={onClose}
             className="flex-1 px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded"

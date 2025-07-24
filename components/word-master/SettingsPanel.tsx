@@ -87,26 +87,28 @@ export default function SettingsPanel({
       onClick={onClose}
     >
       <div 
-        className="bg-gray-800 text-white p-6 rounded-lg shadow-xl w-full max-w-md mx-4"
+        className="bg-gray-800 text-white rounded-lg shadow-xl w-full max-w-md mx-4 flex flex-col max-h-[75vh] sm:max-h-[80vh] min-h-[300px]"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold flex items-center">
-            <Settings className="mr-2" size={24} />
-            Game Settings
-          </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors"
-            aria-label="Close settings"
-          >
-            <X size={24} />
-          </button>
+        {/* Fixed Header */}
+        <div className="flex-shrink-0 p-6 pb-0">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold flex items-center">
+              <Settings className="mr-2" size={24} />
+              Game Settings
+            </h2>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-white transition-colors"
+              aria-label="Close settings"
+            >
+              <X size={24} />
+            </button>
+          </div>
         </div>
 
-        {/* Settings Content */}
-        <div className="space-y-6">
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto p-6 py-4 space-y-6" style={{ WebkitOverflowScrolling: 'touch' }}>
           {/* Difficulty Setting (Placeholder) */}
           <div>
             <label className="block text-sm font-medium mb-2">Difficulty Level</label>
@@ -184,8 +186,8 @@ export default function SettingsPanel({
           </div>
         </div>
 
-        {/* Footer Buttons */}
-        <div className="flex gap-3 mt-8">
+        {/* Fixed Footer */}
+        <div className="flex-shrink-0 p-6 pt-4 flex gap-3">
           <button
             onClick={onClose}
             className="flex-1 px-4 py-3 bg-gray-600 hover:bg-gray-700 rounded-lg font-medium transition-colors"
