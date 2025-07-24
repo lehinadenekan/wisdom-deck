@@ -12,9 +12,9 @@
 
 **Tech Stack:**
 
-- **Framework:** Next.js (v15) with Turbopack
+- **Framework:** Next.js (v14.1.0) with Turbopack
 - **Language:** TypeScript
-- **Styling:** Tailwind CSS (v4)
+- **Styling:** Tailwind CSS (v3.4.1)
 - **Database:** Supabase (PostgreSQL) with two tables: `dictionary_ai` (A-I) and `dictionary_jz` (J-Z)
 - **Payment Processing:** Stripe integration with webhook handling
 - **Testing:** Jest, React Testing Library, Playwright with @axe-core/playwright for accessibility
@@ -32,16 +32,40 @@
 - **Word Validation:** Uses `lib/supabase.ts` with grapheme-aware counting using `Intl.Segmenter`
 - **Database:** 11,447 Yoruba words across two tables (`dictionary_ai` and `dictionary_jz`)
 - **API Routes:**
-  - `/api/word-master/daily-word` - Fetches random daily word (✅ COMPLETED: renamed from `/api/wordle/`)
+  - `/api/word-master/random-word` - Fetches random daily word (✅ COMPLETED: renamed from `/api/wordle/`)
   - `/api/word-master/validate-guess` - Validates user guesses against database (✅ COMPLETED: renamed from `/api/wordle/`)
-- **Features:** Accent-sensitive keyboard, "How to Play" guide, hint systems, Unicode normalization
+- **Features:** Accent-sensitive keyboard, "Help & Hints" modal, hint systems, Unicode normalization
 - **Component:** `components/YorubaWordMaster.tsx` (✅ COMPLETED: renamed from YorubaWordle.tsx)
 - **Hook:** `hooks/useWordMaster.ts` (✅ COMPLETED: renamed from useWordle.ts)
 - **UI Improvements:**
   - "Back to Wisdom Deck" link positioned at top-left corner
-  - Help button (question mark) positioned at top-right corner (no overlap with title)
+  - Help & Hints button positioned at top-right corner (no overlap with title)
   - Wisdom Deck logo (120x120px) in footer
   - Clean, professional layout with proper contrast
+
+### Latest UX Enhancements (December 2024)
+
+- **✅ Reveal Word Functionality:** Complete implementation allowing players to reveal the solution
+  - Added to HelpModal with confirmation dialogs
+  - Displays revealed solution below game board
+  - Resets on new game
+- **✅ HelpModal Improvements:** Replaced HowToPlayModal with better tabbed interface
+  - "How to Play" tab: Game instructions and rules
+  - "Need Help?" tab: Enhanced reveal word functionality with better UX
+  - Better confirmation dialogs and user feedback
+- **✅ Navbar Updates:** Changed "Help" button text to "Help & Hints"
+- **✅ Modal UX Enhancements:**
+  - Universal escape key support for all modals
+  - Backdrop click-to-close functionality
+  - Confirmation modals for destructive actions
+  - Toast notifications for user feedback
+- **✅ Settings Panel Improvements:**
+  - Apply button no longer forces game reset
+  - Settings changes apply immediately without losing progress
+  - Toast notification when settings are applied
+- **✅ Memory Leak Fixes:** Optimized modal event listeners to prevent accumulation
+- **✅ Dependency Stability:** Fixed @nodelib package version conflicts
+- **✅ Cache Management:** Added development scripts for cache clearing
 
 ### Wisdom Deck Branding & UI Enhancements (LATEST)
 
@@ -98,6 +122,11 @@
 - **✅ Server Components:** Added 'use client' directive to fix Server Component hooks error
 - **✅ Stripe API:** Updated to latest API version ('2025-06-30.basil')
 - **✅ Playwright Config:** Fixed baseURL and webServer configuration
+- **✅ Reveal Word Feature:** Complete implementation with confirmation dialogs
+- **✅ HelpModal Replacement:** Better tabbed interface with enhanced UX
+- **✅ Modal UX:** Universal escape key and backdrop click support
+- **✅ Memory Leaks:** Fixed accumulating event listeners in modals
+- **✅ Dependencies:** Resolved @nodelib package version conflicts
 
 ## 3. Environment Variables Required
 
@@ -125,6 +154,10 @@
 - **✅ COMPLETED:** Updated URLs and navigation structure
 - **✅ COMPLETED:** All rename operations (routes, components, hooks, APIs)
 - **✅ COMPLETED:** Comprehensive testing phase with all systems operational
+- **✅ COMPLETED:** Reveal Word functionality with confirmation dialogs
+- **✅ COMPLETED:** HelpModal replacement with tabbed interface
+- **✅ COMPLETED:** Modal UX improvements and memory leak fixes
+- **✅ COMPLETED:** Dependency stability and cache management
 
 ### **Testing Results Summary:**
 
@@ -138,6 +171,10 @@
 - ✅ **Game Functionality:** Basic game interaction works without errors
 - ✅ **Visual Branding:** Consistent "Word Master" branding throughout
 - ✅ **Console Errors:** No critical errors during testing
+- ✅ **Reveal Word:** Functionality works with confirmation dialogs
+- ✅ **Help Modal:** Tabbed interface with enhanced UX
+- ✅ **Modal Interactions:** Escape key and backdrop click support
+- ✅ **Settings Panel:** Apply without game reset functionality
 
 **Key Files:**
 
@@ -149,6 +186,9 @@
 - `app/api/stripe/` - Payment API routes
 - `components/layout/Footer.tsx` - Footer with Wisdom Deck logo
 - `components/layout/Navbar.tsx` - Clean navigation bar
+- `components/wordle/HelpModal.tsx` - Enhanced help modal with tabbed interface
+- `components/word-master/ConfirmationModal.tsx` - Reusable confirmation modal
+- `components/word-master/ToastNotification.tsx` - Toast notification component
 - `tests/example.spec.ts` - E2E tests with accessibility (updated for new URLs)
 - `playwright.config.ts` - Test configuration
 - `mocks/handlers.js` - API mock handlers (✅ COMPLETED: updated for new API paths)
@@ -168,17 +208,49 @@ Please confirm your understanding of:
 7. **✅ COMPLETED:** The updated URL structure and navigation improvements
 8. **✅ COMPLETED:** All rename operations (routes, components, hooks, APIs)
 9. **✅ COMPLETED:** Comprehensive testing phase with all systems operational
+10. **✅ COMPLETED:** Reveal Word functionality with confirmation dialogs
+11. **✅ COMPLETED:** HelpModal replacement with enhanced tabbed interface
+12. **✅ COMPLETED:** Modal UX improvements and memory leak fixes
+13. **✅ COMPLETED:** Dependency stability and cache management
 
 The project is now fully functional and deployed with professional branding throughout. All Phase 1 & 2 changes have been completed successfully, including comprehensive testing. Any new development should maintain the high quality standards and comprehensive testing approach that has been established.
 
 ---
 
-## Latest Changes (June 2024)
+## Latest Changes (December 2024)
 
+- **Reveal Word Functionality:**
+  - Complete implementation allowing players to reveal the solution
+  - Added to HelpModal with confirmation dialogs
+  - Displays revealed solution below game board
+  - Resets on new game
+- **HelpModal Improvements:**
+  - Replaced HowToPlayModal with better tabbed interface
+  - "How to Play" tab: Game instructions and rules
+  - "Need Help?" tab: Enhanced reveal word functionality with better UX
+  - Better confirmation dialogs and user feedback
+- **Navbar Updates:**
+  - Changed "Help" button text to "Help & Hints"
+  - Consistent emoji icons for all game actions
+- **Modal UX Enhancements:**
+  - Universal escape key support for all modals
+  - Backdrop click-to-close functionality
+  - Confirmation modals for destructive actions
+  - Toast notifications for user feedback
+- **Settings Panel Improvements:**
+  - Apply button no longer forces game reset
+  - Settings changes apply immediately without losing progress
+  - Toast notification when settings are applied
+- **Memory Leak Fixes:**
+  - Optimized modal event listeners to prevent accumulation
+  - Proper cleanup functions in useEffect hooks
+- **Dependency Stability:**
+  - Fixed @nodelib package version conflicts
+  - Added cache management scripts to package.json
 - **Navigation:**
   - Single ConditionalNavbar is used for all pages; no duplicate navbars.
   - Mobile menu no longer includes 'Back to Wisdom Deck'.
-  - All game actions in the mobile and desktop navbars use emoji icons (🎮 New Game, 📊 Statistics, ⚙️ Settings, ❓ Help).
+  - All game actions in the mobile and desktop navbars use emoji icons (🎮 New Game, 📊 Statistics, ⚙️ Settings, ❓ Help & Hints).
   - Desktop and mobile navbars are visually consistent and compact.
 - **Hint Toggles:**
   - Tonal Accents, Part of Speech, and English Translation toggles are only accessible via the Settings modal (not in the navbar or as a separate bar).

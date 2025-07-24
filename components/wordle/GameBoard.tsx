@@ -8,6 +8,7 @@ interface GameBoardProps {
   turn: number;
   solution: string;
   showTonalAccents: boolean;
+  wordLength: number;
   className?: string;
 }
 
@@ -20,8 +21,8 @@ const getGraphemes = (str: string): string[] => {
   return Array.from(str.normalize('NFC'));
 };
 
-const GameBoard: React.FC<GameBoardProps> = ({ guesses, currentGuess, turn, solution, showTonalAccents, className }) => {
-  const totalCols = 5;
+const GameBoard: React.FC<GameBoardProps> = ({ guesses, currentGuess, turn, solution, showTonalAccents, wordLength, className }) => {
+  const totalCols = wordLength;
 
   return (
     <div className={`relative ${className || ''}`}>
@@ -30,7 +31,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ guesses, currentGuess, turn, solu
           // This is a past guess, so we display it from the `guesses` state
           if (rowIndex < turn) {
             return (
-              <div key={rowIndex} className="grid grid-cols-5 gap-0.5 sm:gap-1.5">
+              <div key={rowIndex} className={`grid gap-0.5 sm:gap-1.5 ${getGridColsClass(wordLength)}`}>
                 {guess.map((tile, colIndex) => (
                   <div 
                     key={colIndex}
@@ -51,7 +52,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ guesses, currentGuess, turn, solu
           if (rowIndex === turn) {
             const currentGraphemes = getGraphemes(currentGuess);
             return (
-              <div key={rowIndex} className="grid grid-cols-5 gap-0.5 sm:gap-1.5">
+              <div key={rowIndex} className={`grid gap-0.5 sm:gap-1.5 ${getGridColsClass(wordLength)}`}>
                 {Array.from({ length: totalCols }).map((_, colIndex) => (
                   <div 
                     key={colIndex}
@@ -66,7 +67,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ guesses, currentGuess, turn, solu
 
           // This is a future, empty row
           return (
-            <div key={rowIndex} className="grid grid-cols-5 gap-0.5 sm:gap-1.5">
+            <div key={rowIndex} className={`grid gap-0.5 sm:gap-1.5 ${getGridColsClass(wordLength)}`}>
               {Array.from({ length: totalCols }).map((_, colIndex) => (
                 <div 
                   key={colIndex}
@@ -78,7 +79,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ guesses, currentGuess, turn, solu
         })}
       </div>
       {showTonalAccents && (
-        <div className="absolute -top-8 left-0 right-0 grid grid-cols-5 gap-0.5 sm:gap-1.5 pointer-events-none">
+        <div className={`absolute -top-8 left-0 right-0 grid gap-0.5 sm:gap-1.5 pointer-events-none ${getGridColsClass(wordLength)}`}>
           {getGraphemes(solution).map((char, index) => {
             const accent = getDiacritic(char);
             return (
@@ -93,6 +94,18 @@ const GameBoard: React.FC<GameBoardProps> = ({ guesses, currentGuess, turn, solu
       )}
     </div>
   );
+};
+
+// Helper function to get the appropriate grid columns class
+const getGridColsClass = (wordLength: number): string => {
+  switch (wordLength) {
+    case 3: return 'grid-cols-3';
+    case 4: return 'grid-cols-4';
+    case 5: return 'grid-cols-5';
+    case 6: return 'grid-cols-6';
+    case 7: return 'grid-cols-7';
+    default: return 'grid-cols-5';
+  }
 };
 
 export default GameBoard; 

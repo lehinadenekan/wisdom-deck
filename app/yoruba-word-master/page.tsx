@@ -28,7 +28,9 @@ const YorubaWordlePage = () => {
     errorMessage,
     isGameWon,
     isGameLost,
-    startNewGame
+    startNewGame,
+    startNewGameWithLength,
+    wordLength
   } = useWordMaster();
 
   const { updateStatistics } = usePreferences();
@@ -122,6 +124,8 @@ const YorubaWordlePage = () => {
         showEnglishTranslation={showEnglishTranslation}
         setShowEnglishTranslation={setShowEnglishTranslation}
         onSettingsApplied={handleSettingsApplied}
+        startNewGameWithLength={startNewGameWithLength}
+        currentWordLength={wordLength}
       />
       <StatisticsDisplay 
         isOpen={isStatsOpen}
@@ -157,6 +161,7 @@ const YorubaWordlePage = () => {
               turn={turn} 
               solution={solution} 
               showTonalAccents={showTonalAccents}
+              wordLength={wordLength}
               className="mb-2 sm:mb-4"
             />
             

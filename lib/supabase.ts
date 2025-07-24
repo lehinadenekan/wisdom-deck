@@ -108,20 +108,68 @@ const getUnicodePoints = (str: string): { grapheme: string; points: number[] }[]
 };
 
 // Get a random 5-letter word for the Word Master game
-export async function getRandomWordMasterWord(): Promise<WordleWord> {
+export async function getRandomWordMasterWord(wordLength: number = 5): Promise<WordleWord> {
   try {
     // Randomly choose which table to query
     const table = Math.random() < 0.5 ? 'dictionary_ai' : 'dictionary_jz';
-    console.log('Querying table:', table);
+    console.log(`Querying table: ${table} for word length: ${wordLength}`);
 
-    // Use efficient random selection
+    // Use efficient random selection with word length filter
     const { count } = await supabase
       .from(table)
       .select('*', { count: 'exact', head: true })
-      .eq('word_length', 5);
+      .eq('word_length', wordLength);
 
     if (!count || count === 0) {
-      throw new Error(`No 5-letter words found in ${table}`);
+      console.log(`No ${wordLength}-letter words found in ${table}, trying fallback to 5-letter words`);
+      // Fallback to 5-letter words if requested length not available
+      const { count: fallbackCount } = await supabase
+        .from(table)
+        .select('*', { count: 'exact', head: true })
+        .eq('word_length', 5);
+      
+      if (!fallbackCount || fallbackCount === 0) {
+        throw new Error(`No words found in ${table}`);
+      }
+      
+      const randomOffset = Math.floor(Math.random() * fallbackCount);
+      
+      const { data, error } = await supabase
+        .from(table)
+        .select()
+        .eq('word_length', 5)
+        .range(randomOffset, randomOffset)
+        .limit(1);
+
+      if (error || !data || data.length === 0) {
+        throw error || new Error('No word found');
+      }
+
+      const wordData = data[0];
+      
+      // Extract the primary word using same logic
+      const wordVariants = [];
+      const commaParts = wordData.word.split(',');
+      
+      for (const part of commaParts) {
+        const cleanPart = part.split('(')[0].trim();
+        if (cleanPart) {
+          wordVariants.push(cleanPart);
+        }
+      }
+      
+      const extractedWord = wordVariants[0] || wordData.word.split(/[\s,\(]/)[0].trim();
+      
+      console.log('Selected random word (fallback):', {
+        original: wordData.word,
+        extracted: extractedWord,
+        wordLength: extractedWord.length
+      });
+
+      return {
+        ...wordData,
+        word: extractedWord
+      } as WordleWord;
     }
 
     const randomOffset = Math.floor(Math.random() * count);
@@ -129,7 +177,7 @@ export async function getRandomWordMasterWord(): Promise<WordleWord> {
     const { data, error } = await supabase
       .from(table)
       .select()
-      .eq('word_length', 5)
+      .eq('word_length', wordLength)
       .range(randomOffset, randomOffset)
       .limit(1);
 
@@ -154,7 +202,8 @@ export async function getRandomWordMasterWord(): Promise<WordleWord> {
     
     console.log('Selected random word:', {
       original: wordData.word,
-      extracted: extractedWord
+      extracted: extractedWord,
+      wordLength: extractedWord.length
     });
 
     return {

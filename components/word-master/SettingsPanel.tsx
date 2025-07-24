@@ -15,14 +15,33 @@ interface SettingsPanelProps {
   showEnglishTranslation?: boolean;
   setShowEnglishTranslation?: (show: boolean) => void;
   onSettingsApplied?: () => void;
+  startNewGameWithLength?: (length: number) => void;
+  currentWordLength?: number;
 }
 
-export default function SettingsPanel({ isOpen, onClose, onNewGame, showTonalAccents, setShowTonalAccents, showPartOfSpeech, setShowPartOfSpeech, showEnglishTranslation, setShowEnglishTranslation, onSettingsApplied }: SettingsPanelProps) {
+export default function SettingsPanel({ 
+  isOpen, 
+  onClose, 
+  onNewGame, 
+  showTonalAccents, 
+  setShowTonalAccents, 
+  showPartOfSpeech, 
+  setShowPartOfSpeech, 
+  showEnglishTranslation, 
+  setShowEnglishTranslation, 
+  onSettingsApplied,
+  startNewGameWithLength,
+  currentWordLength = 5
+}: SettingsPanelProps) {
   const { preferences, updatePreference } = usePreferences();
   
   // Use preferences for state
   const difficulty = preferences.difficulty;
-  const wordLength = preferences.wordLength;
+  const [selectedWordLength, setSelectedWordLength] = useState(currentWordLength);
+
+  useEffect(() => {
+    setSelectedWordLength(currentWordLength);
+  }, [currentWordLength]);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -47,10 +66,16 @@ export default function SettingsPanel({ isOpen, onClose, onNewGame, showTonalAcc
   };
 
   const handleWordLengthChange = (value: number) => {
+    setSelectedWordLength(value);
     updatePreference('wordLength', value as 3 | 4 | 5 | 6 | 7);
   };
 
   const handleApplySettings = () => {
+    // If word length changed, start a new game with the new length
+    if (selectedWordLength !== currentWordLength && startNewGameWithLength) {
+      startNewGameWithLength(selectedWordLength);
+    }
+    
     // Apply settings without resetting the game
     onSettingsApplied && onSettingsApplied();
     onClose();
@@ -98,21 +123,20 @@ export default function SettingsPanel({ isOpen, onClose, onNewGame, showTonalAcc
             </select>
           </div>
 
-          {/* Word Length Setting (Placeholder) */}
+          {/* Word Length Setting */}
           <div>
             <label className="block text-sm font-medium mb-2">Word Length</label>
             <div className="text-sm text-gray-400 mb-2">Number of letters in the word</div>
             <select 
-              value={wordLength}
+              value={selectedWordLength}
               onChange={(e) => handleWordLengthChange(Number(e.target.value))}
               className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              disabled
             >
-              <option value={3}>3 Letters (Coming Soon)</option>
-              <option value={4}>4 Letters (Coming Soon)</option>
-              <option value={5}>5 Letters (Current)</option>
-              <option value={6}>6 Letters (Coming Soon)</option>
-              <option value={7}>7 Letters (Coming Soon)</option>
+              <option value={3}>3 Letters</option>
+              <option value={4}>4 Letters</option>
+              <option value={5}>5 Letters</option>
+              <option value={6}>6 Letters</option>
+              <option value={7}>7 Letters</option>
             </select>
           </div>
 
@@ -153,10 +177,9 @@ export default function SettingsPanel({ isOpen, onClose, onNewGame, showTonalAcc
 
           {/* Info Box */}
           <div className="bg-purple-900 bg-opacity-50 border border-purple-600 rounded-lg p-4">
-            <h3 className="font-medium mb-2 text-purple-200">Coming Soon!</h3>
+            <h3 className="font-medium mb-2 text-purple-200">Word Length Available!</h3>
             <p className="text-sm text-purple-300">
-              Difficulty levels and variable word lengths are in development. 
-              Currently playing with 5-letter intermediate words.
+              You can now choose between 3-7 letter words. Changing the word length will start a new game.
             </p>
           </div>
         </div>

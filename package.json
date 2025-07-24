@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "dev:force": "PORT=3000 next dev",
+    "dev:force": "pkill -f 'next dev' || true && pkill -f 'node.*300[0-9]' || true && sleep 1 && PORT=3000 next dev",
     "dev:clean": "rm -rf .next && npm run dev",
     "cache:clear": "rm -rf .next && rm -rf node_modules/.cache",
     "reset:dev": "rm -rf .next && rm -rf node_modules && npm install && npm run dev",
@@ -13,6 +13,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@jridgewell/gen-mapping": "^0.3.12",
     "@nodelib/fs.scandir": "^3.0.0",
     "@nodelib/fs.stat": "^4.0.0",
     "@nodelib/fs.walk": "^3.0.1",

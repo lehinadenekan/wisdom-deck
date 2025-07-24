@@ -6,9 +6,9 @@ This document provides a comprehensive overview of the Wisdom Deck project, incl
 
 ## 1. Core Technologies
 
-- **Framework:** Next.js (v15) with Turbopack
+- **Framework:** Next.js (v14.1.0) with Turbopack
 - **Language:** TypeScript
-- **Styling:** Tailwind CSS (v4)
+- **Styling:** Tailwind CSS (v3.4.1)
 - **Package Manager:** npm
 - **Database:** Supabase (PostgreSQL)
 - **Payment Processing:** Stripe
@@ -32,7 +32,7 @@ This document provides a comprehensive overview of the Wisdom Deck project, incl
   - **Grapheme Counting:** Proper visual character counting for Yoruba diacritics
 - **Game Logic (`hooks/useWordMaster.ts`):** ✅ COMPLETED: renamed from `useWordle.ts`
   - **Accent-Sensitive Logic:** Each character and its accented variations (e.g., `i`, `ì`, `í`) are treated as unique letters
-  - **Daily Word:** Fetched from `/api/word-master/daily-word` API route ✅ COMPLETED: renamed from `/api/wordle/`
+  - **Daily Word:** Fetched from `/api/word-master/random-word` API route ✅ COMPLETED: renamed from `/api/wordle/`
   - **Guess Validation:** Validated against `/api/word-master/validate-guess` API route ✅ COMPLETED: renamed from `/api/wordle/`
 - **UI & Gameplay Features:**
   - **Main Page:** `app/yoruba-word-master/page.tsx` ✅ COMPLETED: renamed from yoruba-wordle
@@ -41,11 +41,35 @@ This document provides a comprehensive overview of the Wisdom Deck project, incl
   - **Hint Systems:**
     - **Difficulty Setting:** "Show tonal accents" toggle for easy mode
     - **In-Game Hints:** Part of Speech, English Translation, and additional info
-  - **"How to Play" Modal:** Culturally specific guide explaining accent importance
+  - **Help & Hints Modal:** Enhanced tabbed interface with reveal word functionality
   - **Font:** **Noto Sans** for correct Yoruba diacritic rendering
   - **Navigation:** "Back to Wisdom Deck" link positioned at top-left corner
-  - **Help Button:** Question mark button positioned at top-right corner (no overlap with title)
+  - **Help Button:** "Help & Hints" button positioned at top-right corner (no overlap with title)
   - **Subtitle:** "A Yorùbá Word Guessing Game"
+
+### Latest UX Enhancements (December 2024)
+
+- **✅ Reveal Word Functionality:** Complete implementation allowing players to reveal the solution
+  - Added to HelpModal with confirmation dialogs
+  - Displays revealed solution below game board
+  - Resets on new game
+- **✅ HelpModal Improvements:** Replaced HowToPlayModal with better tabbed interface
+  - "How to Play" tab: Game instructions and rules
+  - "Need Help?" tab: Enhanced reveal word functionality with better UX
+  - Better confirmation dialogs and user feedback
+- **✅ Navbar Updates:** Changed "Help" button text to "Help & Hints"
+- **✅ Modal UX Enhancements:**
+  - Universal escape key support for all modals
+  - Backdrop click-to-close functionality
+  - Confirmation modals for destructive actions
+  - Toast notifications for user feedback
+- **✅ Settings Panel Improvements:**
+  - Apply button no longer forces game reset
+  - Settings changes apply immediately without losing progress
+  - Toast notification when settings are applied
+- **✅ Memory Leak Fixes:** Optimized modal event listeners to prevent accumulation
+- **✅ Dependency Stability:** Fixed @nodelib package version conflicts
+- **✅ Cache Management:** Added development scripts for cache clearing
 
 ### Wisdom Deck Branding & UI Improvements
 
@@ -142,7 +166,7 @@ A comprehensive testing and CI pipeline has been established to ensure code qual
 - **Title Updates:** All "Wordle" references changed to "Word Master" with Yorùbá accent marks ✅ COMPLETED
 - **Subtitle Update:** "A Yorùbá Word Guessing Game" ✅ COMPLETED
 - **Navigation Links:** Updated all internal links and test expectations ✅ COMPLETED
-- **How to Play Modal:** Already properly branded with Yorùbá titles and no "Wordle" references ✅ COMPLETED
+- **Help & Hints Modal:** Enhanced tabbed interface with reveal word functionality ✅ COMPLETED
 
 ### 4.2. Component & Hook Renaming (✅ COMPLETED)
 
@@ -162,7 +186,7 @@ A comprehensive testing and CI pipeline has been established to ensure code qual
 
 - **Logo Integration:** Wisdom Deck logo (120x120px) added to footers
 - **Navigation Fixes:** "Back to Wisdom Deck" link moved to top-left corner
-- **Button Repositioning:** Help button moved to top-right corner (no overlap with title)
+- **Button Repositioning:** Help & Hints button moved to top-right corner (no overlap with title)
 - **Navbar Cleanup:** Removed "Wisdom Deck" text, aligned navigation to the right
 - **Footer Enhancements:** Removed social media links, added logo, matched text sizes
 - **Layout Consistency:** Clean, professional branding across all pages
@@ -187,6 +211,15 @@ A comprehensive testing and CI pipeline has been established to ensure code qual
 - **Email Collection:** User-friendly email input with validation
 - **Error Handling:** Comprehensive error handling and user feedback
 
+### 4.8. Latest UX Enhancements (December 2024)
+
+- **Reveal Word Functionality:** Complete implementation with confirmation dialogs
+- **HelpModal Replacement:** Better tabbed interface with enhanced UX
+- **Modal UX:** Universal escape key and backdrop click support
+- **Memory Leaks:** Fixed accumulating event listeners in modals
+- **Dependencies:** Resolved @nodelib package version conflicts
+- **Cache Management:** Added development scripts for cache clearing
+
 ---
 
 ## 5. Current Status
@@ -199,6 +232,11 @@ A comprehensive testing and CI pipeline has been established to ensure code qual
 ✅ **UI/UX Enhanced:** Professional logo integration and layout improvements  
 ✅ **Ready for Deployment:** Comprehensive test coverage and quality assurance  
 ✅ **Phase 1 & 2 Complete:** All rename operations and testing completed successfully
+✅ **Reveal Word Feature:** Complete implementation with confirmation dialogs
+✅ **HelpModal Enhancement:** Better tabbed interface with enhanced UX
+✅ **Modal UX:** Universal escape key and backdrop click support
+✅ **Memory Leaks:** Fixed accumulating event listeners in modals
+✅ **Dependencies:** Resolved @nodelib package version conflicts
 
 ### **Testing Results Summary:**
 
@@ -212,6 +250,10 @@ A comprehensive testing and CI pipeline has been established to ensure code qual
 - ✅ **Game Functionality:** Basic game interaction works without errors
 - ✅ **Visual Branding:** Consistent "Word Master" branding throughout
 - ✅ **Console Errors:** No critical errors during testing
+- ✅ **Reveal Word:** Functionality works with confirmation dialogs
+- ✅ **Help Modal:** Tabbed interface with enhanced UX
+- ✅ **Modal Interactions:** Escape key and backdrop click support
+- ✅ **Settings Panel:** Apply without game reset functionality
 
 The project is now production-ready with a robust testing pipeline, excellent accessibility compliance, and professional branding throughout.
 
@@ -225,7 +267,7 @@ The project is now production-ready with a robust testing pipeline, excellent ac
 - `components/YorubaWordMaster.tsx` - Core game logic component ✅ COMPLETED: renamed from YorubaWordle.tsx
 - `components/wordle/Keyboard.tsx` - Accent-sensitive keyboard
 - `components/wordle/GameBoard.tsx` - Game board display
-- `components/wordle/HowToPlayModal.tsx` - Game instructions modal
+- `components/wordle/HelpModal.tsx` - Enhanced help modal with tabbed interface
 
 ### Layout Components
 
@@ -256,12 +298,40 @@ The project is now production-ready with a robust testing pipeline, excellent ac
 
 ---
 
-## Latest Changes (June 2024)
+## Latest Changes (December 2024)
 
+- **Reveal Word Functionality:**
+  - Complete implementation allowing players to reveal the solution
+  - Added to HelpModal with confirmation dialogs
+  - Displays revealed solution below game board
+  - Resets on new game
+- **HelpModal Improvements:**
+  - Replaced HowToPlayModal with better tabbed interface
+  - "How to Play" tab: Game instructions and rules
+  - "Need Help?" tab: Enhanced reveal word functionality with better UX
+  - Better confirmation dialogs and user feedback
+- **Navbar Updates:**
+  - Changed "Help" button text to "Help & Hints"
+  - Consistent emoji icons for all game actions
+- **Modal UX Enhancements:**
+  - Universal escape key support for all modals
+  - Backdrop click-to-close functionality
+  - Confirmation modals for destructive actions
+  - Toast notifications for user feedback
+- **Settings Panel Improvements:**
+  - Apply button no longer forces game reset
+  - Settings changes apply immediately without losing progress
+  - Toast notification when settings are applied
+- **Memory Leak Fixes:**
+  - Optimized modal event listeners to prevent accumulation
+  - Proper cleanup functions in useEffect hooks
+- **Dependency Stability:**
+  - Fixed @nodelib package version conflicts
+  - Added cache management scripts to package.json
 - **Navigation:**
   - Single ConditionalNavbar is used for all pages; no duplicate navbars.
   - Mobile menu no longer includes 'Back to Wisdom Deck'.
-  - All game actions in the mobile and desktop navbars use emoji icons (🎮 New Game, 📊 Statistics, ⚙️ Settings, ❓ Help).
+  - All game actions in the mobile and desktop navbars use emoji icons (🎮 New Game, 📊 Statistics, ⚙️ Settings, ❓ Help & Hints).
   - Desktop and mobile navbars are visually consistent and compact.
 - **Hint Toggles:**
   - Tonal Accents, Part of Speech, and English Translation toggles are only accessible via the Settings modal (not in the navbar or as a separate bar).

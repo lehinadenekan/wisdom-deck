@@ -14,16 +14,31 @@ export async function OPTIONS() {
   return corsResponse(new NextResponse(null, { status: 200 }));
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    // Get length parameter from query string
+    const { searchParams } = new URL(request.url);
+    const lengthParam = searchParams.get('length');
+    const wordLength = lengthParam ? parseInt(lengthParam, 10) : 5;
+    
+    // Validate word length
+    if (wordLength < 3 || wordLength > 7) {
+      return corsResponse(
+        NextResponse.json(
+          { error: 'Word length must be between 3 and 7' },
+          { status: 400 }
+        )
+      );
+    }
+
     // Log environment variables (safely)
     console.log('Environment check:');
     console.log('NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
     console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY exists:', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
     console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY starts with:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.substring(0, 15));
 
-    console.log('Attempting to fetch random word from Supabase...');
-    const word = await getRandomWordMasterWord();
+    console.log(`Attempting to fetch random word from Supabase with length: ${wordLength}`);
+    const word = await getRandomWordMasterWord(wordLength);
     
     if (!word) {
       console.error('No word returned from getRandomWordMasterWord');

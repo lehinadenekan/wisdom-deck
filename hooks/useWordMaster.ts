@@ -46,6 +46,7 @@ const useWordMaster = () => {
     englishTranslation: '',
     additionalInfo: ''
   });
+  const [wordLength, setWordLength] = useState<number>(5);
   const [guesses, setGuesses] = useState<Tile[][]>(() => Array(6).fill(null).map(() => Array(5).fill({ char: '', status: 'empty' })));
   const [currentGuess, setCurrentGuess] = useState<string>('');
   const [turn, setTurn] = useState<number>(0);
@@ -54,10 +55,10 @@ const useWordMaster = () => {
   const [keyboardStatus, setKeyboardStatus] = useState<KeyboardStatus>({});
   const [errorMessage, setErrorMessage] = useState<string>('');
   
-  const fetchWord = useCallback(async () => {
+  const fetchWord = useCallback(async (length: number = 5) => {
     try {
-      console.log('Fetching random word...');
-      const res = await fetch('/api/word-master/random-word');
+      console.log(`Fetching random word with length: ${length}`);
+      const res = await fetch(`/api/word-master/random-word?length=${length}`);
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
@@ -65,13 +66,15 @@ const useWordMaster = () => {
       console.log('Received word data:', data);
       
       if (data.word && data.word.yorubaWord) {
+        const newWordLength = countGraphemes(data.word.yorubaWord);
+        setWordLength(newWordLength);
         setSolution(data.word.yorubaWord.toLowerCase());
         setSolutionInfo({
           partOfSpeech: data.word.partOfSpeech,
           englishTranslation: data.word.englishTranslation,
           additionalInfo: data.word.additionalInfo,
         });
-        console.log('Set solution:', data.word.yorubaWord.toLowerCase());
+        console.log('Set solution:', data.word.yorubaWord.toLowerCase(), 'with length:', newWordLength);
       } else {
         throw new Error('Invalid word data received');
       }
@@ -82,13 +85,13 @@ const useWordMaster = () => {
   }, []);
 
   useEffect(() => {
-    fetchWord();
-  }, [fetchWord]);
+    fetchWord(wordLength);
+  }, [fetchWord, wordLength]);
 
   // Start new game function - resets all state and fetches new word
   const startNewGame = useCallback(async () => {
     // Reset all game state
-    setGuesses(Array(6).fill(null).map(() => Array(5).fill({ char: '', status: 'empty' })));
+    setGuesses(Array(6).fill(null).map(() => Array(wordLength).fill({ char: '', status: 'empty' })));
     setCurrentGuess('');
     setTurn(0);
     setIsGameWon(false);
@@ -97,7 +100,23 @@ const useWordMaster = () => {
     setErrorMessage('');
     
     // Fetch new random word
-    await fetchWord();
+    await fetchWord(wordLength);
+  }, [fetchWord, wordLength]);
+
+  // Start new game with specific word length
+  const startNewGameWithLength = useCallback(async (length: number) => {
+    setWordLength(length);
+    // Reset all game state with new length
+    setGuesses(Array(6).fill(null).map(() => Array(length).fill({ char: '', status: 'empty' })));
+    setCurrentGuess('');
+    setTurn(0);
+    setIsGameWon(false);
+    setIsGameLost(false);
+    setKeyboardStatus({});
+    setErrorMessage('');
+    
+    // Fetch new random word with specified length
+    await fetchWord(length);
   }, [fetchWord]);
 
   const evaluateGuess = useCallback((guess: string): Tile[] => {
@@ -147,7 +166,7 @@ const useWordMaster = () => {
 
   const submitGuess = useCallback(async () => {
     const currentGuessLength = countGraphemes(currentGuess);
-    if (currentGuessLength !== 5) {
+    if (currentGuessLength !== wordLength) {
       setErrorMessage("Not enough letters");
       setTimeout(() => setErrorMessage(''), 2000);
       return;
@@ -196,7 +215,7 @@ const useWordMaster = () => {
       setErrorMessage("Could not validate word.");
       setTimeout(() => setErrorMessage(''), 2000);
     }
-  }, [currentGuess, turn, isGameWon, solution, guesses, evaluateGuess]);
+  }, [currentGuess, turn, isGameWon, solution, guesses, evaluateGuess, wordLength]);
 
   const handleKeyPress = useCallback((key: string) => {
     const lowerKey = key.toLowerCase().normalize('NFC');
@@ -220,20 +239,20 @@ const useWordMaster = () => {
 
     // Handle 'gb' as a single character
     if (lowerKey === 'gb') {
-      if (countGraphemes(currentGuess) < 5) {
+      if (countGraphemes(currentGuess) < wordLength) {
         setCurrentGuess((prev) => prev + 'gb');
       }
       return;
     }
 
     // Regular letter input - now properly handles combined characters
-    if (countGraphemes(currentGuess) < 5 && yorubaAlphabet.has(lowerKey)) {
+    if (countGraphemes(currentGuess) < wordLength && yorubaAlphabet.has(lowerKey)) {
       console.log('Adding character to guess:', lowerKey);
       setCurrentGuess((prev) => prev + lowerKey);
     } else {
       console.log('Character not in Yoruba alphabet:', lowerKey);
     }
-  }, [submitGuess, currentGuess, isGameWon, isGameLost]);
+  }, [submitGuess, currentGuess, isGameWon, isGameLost, wordLength]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -261,6 +280,8 @@ const useWordMaster = () => {
     errorMessage,
     handleKeyPress,
     startNewGame,
+    startNewGameWithLength,
+    wordLength,
   };
 };
 
