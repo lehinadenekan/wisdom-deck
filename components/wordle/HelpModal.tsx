@@ -15,6 +15,7 @@ interface HelpModalProps {
   isWordRevealed?: boolean;
   revealWord?: () => void;
   turn?: number;
+  wordLength?: number;
 }
 
 const HelpModal: React.FC<HelpModalProps> = ({ 
@@ -24,7 +25,8 @@ const HelpModal: React.FC<HelpModalProps> = ({
   solutionInfo, 
   isWordRevealed, 
   revealWord, 
-  turn = 0 
+  turn = 0,
+  wordLength = 5
 }) => {
   const [activeTab, setActiveTab] = useState<'how-to-play' | 'need-help'>('how-to-play');
   const [showRevealConfirmation, setShowRevealConfirmation] = useState(false);
@@ -105,7 +107,7 @@ const HelpModal: React.FC<HelpModalProps> = ({
         <div className="flex-1 overflow-y-auto p-6 py-4" style={{ WebkitOverflowScrolling: 'touch' }}>
           {activeTab === 'how-to-play' && (
             <div className="space-y-5 text-justify">
-              <p className="text-center text-lg">Guess the secret 5-letter <strong className="text-purple-400">Yorùbá</strong> word in six tries.</p>
+              <p className="text-center text-lg">Guess the secret {wordLength}-letter <strong className="text-purple-400">Yorùbá</strong> word in six tries.</p>
 
               <hr className="border-gray-700"/>
 

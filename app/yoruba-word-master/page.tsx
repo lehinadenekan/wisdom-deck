@@ -112,6 +112,7 @@ const YorubaWordlePage = () => {
         onClose={() => setIsHelpOpen(false)} 
         solution={solution}
         revealWord={handleRevealWord}
+        wordLength={wordLength}
       />
       <SettingsPanel 
         isOpen={isSettingsOpen}

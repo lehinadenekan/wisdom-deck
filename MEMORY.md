@@ -346,63 +346,33 @@ The project is now production-ready with a robust testing pipeline, excellent ac
   - **Secondary Buttons:** Consistent gray styling (`bg-gray-600 hover:bg-gray-700`)
 - **Mobile UX Optimization:** Complete modal structure redesign for mobile devices
   - **Fixed-Height Containers:** All modals use `max-h-[75vh]` mobile, `max-h-[80vh]` desktop
-  - **Fixed Header/Footer:** Title and action buttons always visible
-  - **Scrollable Content:** Main content with `overflow-y-auto` and iOS momentum scrolling
-  - **Touch-Friendly:** Proper touch targets and smooth scrolling behavior
-  - **Professional Feel:** Native mobile app-like experience
-  - **Consistent Sizing:** All modals follow same height constraints
-  - **No Hidden Buttons:** Action buttons always accessible on mobile
+  - **Fixed Header/Footer:** Non-scrollable areas with scrollable content middle
+  - **iOS Momentum Scrolling:** `WebkitOverflowScrolling: 'touch'` for smooth mobile scrolling
+  - **Touch-Friendly Design:** Proper touch targets and spacing for mobile interaction
+  - **Responsive Typography:** Optimized text sizes for mobile readability
 - **Word Filtering System:** Complete implementation to exclude problematic database entries
-  - **Filtering Logic:** Added `isValidGameWord()` helper function to validate word format
-  - **Excluded Patterns:** Words with hyphens (-) and spaces are filtered out
+  - **Clean Game Experience:** Filter out words with hyphens (-) and spaces from word selection pool
+  - **Helper Function:** Added `isValidGameWord()` to validate word format
   - **Retry Mechanism:** Up to 10 attempts to find valid words with automatic retry logic
-  - **Clean Gameplay:** Only single, clean Yoruba words are used in gameplay
-  - **Professional Experience:** Eliminates user confusion about input methods
-  - **Robust Implementation:** Works across all word lengths (3-7 letters)
-  - **Debugging Support:** Console logs show filtered words for verification
+  - **Console Logging:** Debug information for filtered words
+  - **Professional Gameplay:** Eliminates confusing multi-word entries and hyphenated words
 - **Keyboard Size Improvements:** Enhanced mobile touch experience with larger keys
-  - **Key Height:** Increased from `h-8 sm:h-14` to `h-12 sm:h-16` (50% larger on mobile, 14% larger on desktop)
-  - **Text Size:** Upgraded from `text-xs sm:text-lg` to `text-sm sm:text-xl` for better readability
-  - **Padding:** Enhanced from `p-0.5 sm:p-1` to `p-1 sm:p-2` for better touch targets
-  - **Row Spacing:** Improved from `mb-0.5 sm:mb-2` to `mb-1 sm:mb-3` for better separation
-  - **Key Spacing:** Increased from `gap-0.5 sm:gap-1` to `gap-1 sm:gap-1.5` for easier tapping
-  - **Variant Popups:** Scaled up from `w-12 h-12 text-2xl` to `w-14 h-14 text-3xl` for consistency
-  - **Accessibility:** Meets minimum 44px touch target requirements (48px achieved)
-  - **Mobile Optimization:** Significantly easier to tap accurately on small screens
-  - **Professional Feel:** Matches modern mobile app keyboard standards
-- **Dynamic Grid Squares:** Complete implementation for 3-7 letter word support
-  - GameBoard now dynamically adapts grid columns based on word length
-  - Settings panel includes word length selection (3-7 letters)
-  - Supabase queries filter by word_length with fallback logic
-  - API route validates word length range (3-7)
-  - Keyboard layout and spacing remain identical across all word lengths
-- **Development Scripts:** Added `dev:force` script for development workflow
-  - Kills all existing Next.js processes and Node.js processes on ports 3000-3009
-  - Forces server to start on port 3000
-  - Includes 1-second delay for process termination
-- **Reveal Word Functionality:** Complete implementation allowing players to reveal the solution
-  - Added to HelpModal with confirmation dialogs
-  - Displays revealed solution below game board
-  - Resets on new game
-- **HelpModal Improvements:** Replaced HowToPlayModal with better tabbed interface
-  - "How to Play" tab: Game instructions and rules
-  - "Need Help?" tab: Enhanced reveal word functionality with better UX
-  - Better confirmation dialogs and user feedback
-- **Navbar Updates:** Changed "Help" button text to "Help & Hints"
-- **Modal UX Enhancements:**
-  - Universal escape key support for all modals
-  - Backdrop click-to-close functionality
-  - Confirmation modals for destructive actions
-  - Toast notifications for user feedback
-- **Settings Panel Improvements:**
-  - Apply button no longer forces game reset
-  - Settings changes apply immediately without losing progress
-  - Toast notification when settings are applied
-  - Word length selection with immediate game restart when changed
-- **Memory Leak Fixes:** Optimized modal event listeners to prevent accumulation
-- **Dependency Stability:** Fixed @nodelib package version conflicts
-- **Cache Management:** Added development scripts for cache clearing
-
----
+  - **Mobile Touch Enhancement:** Increased key height from `h-8 sm:h-14` to `h-12 sm:h-16` (50% larger on mobile, 14% larger on desktop)
+  - **Text Size Upgrade:** Enhanced from `text-xs sm:text-lg` to `text-sm sm:text-xl` for better readability
+  - **Padding Enhancement:** Improved from `p-0.5 sm:p-1` to `p-1 sm:p-2` for better touch targets
+  - **Spacing Improvements:** Better row spacing (`mb-1 sm:mb-3`) and key spacing (`gap-1 sm:gap-1.5`)
+  - **Variant Popup Scaling:** Scaled up from `w-12 h-12 text-2xl` to `w-14 h-14 text-3xl` for consistency
+  - **Touch Target Compliance:** Meets minimum 44px touch target requirements (48px achieved)
+- **Case-Insensitive URL Routing:** Comprehensive middleware implementation
+  - **Middleware Implementation:** Added `middleware.ts` for comprehensive case-insensitive routing
+  - **URL Variations:** `/Yoruba-word-master`, `/YORUBA-WORD-MASTER`, `/Yoruba-Wordle` all redirect to `/yoruba-word-master`
+  - **SEO Friendly:** Uses 307 Temporary Redirects to maintain search engine rankings
+  - **User Experience:** Users reach the game regardless of URL case variations
+- **Dynamic Help Text:** Real-time word length display in help modal
+  - **Word Length Integration:** Help modal now dynamically displays correct word length (3-7 letters) based on player settings
+  - **Template Literals:** Replaced hardcoded "5-letter" with `${wordLength}-letter` dynamic text
+  - **Prop Integration:** Added `wordLength` prop to HelpModal component interface
+  - **Real-time Updates:** Text updates immediately when player changes word length setting
+  - **Grammar Consistency:** Maintains correct grammar for all supported word lengths
 
 This section should be kept up to date as further changes are made.
