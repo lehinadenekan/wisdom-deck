@@ -49,6 +49,16 @@ This document provides a comprehensive overview of the Wisdom Deck project, incl
 
 ### Latest UX Enhancements (December 2024)
 
+- **✅ Dynamic Grid Squares:** Complete implementation for 3-7 letter word support
+  - GameBoard now dynamically adapts grid columns based on word length
+  - Settings panel includes word length selection (3-7 letters)
+  - Supabase queries filter by word_length with fallback logic
+  - API route validates word length range (3-7)
+  - Keyboard layout and spacing remain identical across all word lengths
+- **✅ Development Scripts:** Added `dev:force` script for development workflow
+  - Kills all existing Next.js processes and Node.js processes on ports 3000-3009
+  - Forces server to start on port 3000
+  - Includes 1-second delay for process termination
 - **✅ Reveal Word Functionality:** Complete implementation allowing players to reveal the solution
   - Added to HelpModal with confirmation dialogs
   - Displays revealed solution below game board
@@ -67,6 +77,7 @@ This document provides a comprehensive overview of the Wisdom Deck project, incl
   - Apply button no longer forces game reset
   - Settings changes apply immediately without losing progress
   - Toast notification when settings are applied
+  - Word length selection with immediate game restart when changed
 - **✅ Memory Leak Fixes:** Optimized modal event listeners to prevent accumulation
 - **✅ Dependency Stability:** Fixed @nodelib package version conflicts
 - **✅ Cache Management:** Added development scripts for cache clearing
