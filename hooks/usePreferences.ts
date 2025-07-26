@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 
 interface GamePreferences {
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  wordLength: 3 | 4 | 5 | 6 | 7;
+  difficulty: 'easy' | 'intermediate';
+  wordLength: 2 | 3 | 4 | 5 | 6 | 7;
   statistics: {
     gamesPlayed: number;
     gamesWon: number;
@@ -15,7 +15,7 @@ interface GamePreferences {
 }
 
 const defaultPreferences: GamePreferences = {
-  difficulty: 'intermediate',
+  difficulty: 'easy',
   wordLength: 5,
   statistics: {
     gamesPlayed: 0,

@@ -62,12 +62,12 @@ export default function SettingsPanel({
   if (!isOpen) return null;
 
   const handleDifficultyChange = (value: string) => {
-    updatePreference('difficulty', value as 'beginner' | 'intermediate' | 'advanced');
+    updatePreference('difficulty', value as 'easy' | 'intermediate');
   };
 
   const handleWordLengthChange = (value: number) => {
     setSelectedWordLength(value);
-    updatePreference('wordLength', value as 3 | 4 | 5 | 6 | 7);
+    updatePreference('wordLength', value as 2 | 3 | 4 | 5 | 6 | 7);
   };
 
   const handleApplySettings = () => {
@@ -109,7 +109,7 @@ export default function SettingsPanel({
 
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto p-6 py-4 space-y-6" style={{ WebkitOverflowScrolling: 'touch' }}>
-          {/* Difficulty Setting (Placeholder) */}
+          {/* Difficulty Setting */}
           <div>
             <label className="block text-sm font-medium mb-2">Difficulty Level</label>
             <div className="text-sm text-gray-400 mb-2">Choose your challenge level</div>
@@ -117,11 +117,9 @@ export default function SettingsPanel({
               value={difficulty}
               onChange={(e) => handleDifficultyChange(e.target.value)}
               className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              disabled
             >
-              <option value="beginner">Beginner (Coming Soon)</option>
-              <option value="intermediate">Intermediate (Current)</option>
-              <option value="advanced">Advanced (Coming Soon)</option>
+              <option value="easy">Easy - Everyday vocabulary</option>
+              <option value="intermediate">Intermediate - Cultural terms</option>
             </select>
           </div>
 
@@ -134,6 +132,7 @@ export default function SettingsPanel({
               onChange={(e) => handleWordLengthChange(Number(e.target.value))}
               className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             >
+              <option value={2}>2 Letters</option>
               <option value={3}>3 Letters</option>
               <option value={4}>4 Letters</option>
               <option value={5}>5 Letters</option>
@@ -179,9 +178,9 @@ export default function SettingsPanel({
 
           {/* Info Box */}
           <div className="bg-purple-900 bg-opacity-50 border border-purple-600 rounded-lg p-4">
-            <h3 className="font-medium mb-2 text-purple-200">Word Length Available!</h3>
+            <h3 className="font-medium mb-2 text-purple-200">New Features Available!</h3>
             <p className="text-sm text-purple-300">
-              You can now choose between 3-7 letter words. Changing the word length will start a new game.
+              You can now choose between 2-7 letter words and select your difficulty level. Easy words are everyday vocabulary, while intermediate includes cultural terms and moderate complexity.
             </p>
           </div>
         </div>

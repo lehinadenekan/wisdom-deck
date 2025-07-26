@@ -16,16 +16,28 @@ export async function OPTIONS() {
 
 export async function GET(request: Request) {
   try {
-    // Get length parameter from query string
+    // Get parameters from query string
     const { searchParams } = new URL(request.url);
     const lengthParam = searchParams.get('length');
+    const difficultyParam = searchParams.get('difficulty');
     const wordLength = lengthParam ? parseInt(lengthParam, 10) : 5;
+    const difficulty = (difficultyParam as 'easy' | 'intermediate') || 'intermediate';
     
     // Validate word length
-    if (wordLength < 3 || wordLength > 7) {
+    if (wordLength < 2 || wordLength > 7) {
       return corsResponse(
         NextResponse.json(
-          { error: 'Word length must be between 3 and 7' },
+          { error: 'Word length must be between 2 and 7' },
+          { status: 400 }
+        )
+      );
+    }
+
+    // Validate difficulty
+    if (!['easy', 'intermediate'].includes(difficulty)) {
+      return corsResponse(
+        NextResponse.json(
+          { error: 'Difficulty must be easy or intermediate' },
           { status: 400 }
         )
       );
@@ -37,8 +49,8 @@ export async function GET(request: Request) {
     console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY exists:', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
     console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY starts with:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.substring(0, 15));
 
-    console.log(`Attempting to fetch random word from Supabase with length: ${wordLength}`);
-    const word = await getRandomWordMasterWord(wordLength);
+    console.log(`Attempting to fetch random word from Supabase with length: ${wordLength}, difficulty: ${difficulty}`);
+    const word = await getRandomWordMasterWord(wordLength, difficulty);
     
     if (!word) {
       console.error('No word returned from getRandomWordMasterWord');

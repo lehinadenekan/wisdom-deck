@@ -31,6 +31,9 @@ const LoadingFallback = () => (
 
 // Component that uses useSearchParams - this needs to be wrapped in Suspense
 const YorubaWordMasterGame = () => {
+  const { preferences } = usePreferences();
+  const difficulty = preferences.difficulty;
+  
   const { 
     solution,
     solutionInfo, 
@@ -45,7 +48,7 @@ const YorubaWordMasterGame = () => {
     startNewGame,
     startNewGameWithLength,
     wordLength
-  } = useWordMaster();
+  } = useWordMaster(difficulty);
 
   const { updateStatistics } = usePreferences();
 

@@ -127,7 +127,7 @@ const getUnicodePoints = (str: string): { grapheme: string; points: number[] }[]
 };
 
 // Get a random 5-letter word for the Word Master game
-export async function getRandomWordMasterWord(wordLength: number = 5): Promise<WordleWord> {
+export async function getRandomWordMasterWord(wordLength: number = 5, difficulty: 'easy' | 'intermediate' = 'intermediate'): Promise<WordleWord> {
   const maxAttempts = 10;
   let attempts = 0;
   
@@ -137,33 +137,40 @@ export async function getRandomWordMasterWord(wordLength: number = 5): Promise<W
       console.log(`Attempt ${attempts}/${maxAttempts} to find valid word`);
       
       const table = Math.random() < 0.5 ? 'dictionary_ai' : 'dictionary_jz';
-      console.log(`Querying table: ${table} for word length: ${wordLength}`);
+      console.log(`Querying table: ${table} for word length: ${wordLength}, difficulty: ${difficulty}`);
 
-      const { count } = await supabase
-        .from(table)
-        .select('*', { count: 'exact', head: true })
-        .eq('word_length', wordLength);
+      // Build query with strict difficulty filtering (NO NULL fallback)
+      let query = supabase.from(table).select('*', { count: 'exact', head: true }).eq('word_length', wordLength);
+      if (difficulty === 'easy') {
+        query = query.eq('difficulty_level', 'easy');
+      } else if (difficulty === 'intermediate') {
+        query = query.eq('difficulty_level', 'intermediate');
+      }
+      const { count } = await query;
 
       if (!count || count === 0) {
-        console.log(`No ${wordLength}-letter words found in ${table}, trying fallback to 5-letter words`);
+        console.log(`No ${wordLength}-letter ${difficulty} words found in ${table}, trying fallback to 5-letter words`);
         // Fallback to 5-letter words if requested length not available
-        const { count: fallbackCount } = await supabase
-          .from(table)
-          .select('*', { count: 'exact', head: true })
-          .eq('word_length', 5);
+        let fallbackQuery = supabase.from(table).select('*', { count: 'exact', head: true }).eq('word_length', 5);
+        if (difficulty === 'easy') {
+          fallbackQuery = fallbackQuery.eq('difficulty_level', 'easy');
+        } else if (difficulty === 'intermediate') {
+          fallbackQuery = fallbackQuery.eq('difficulty_level', 'intermediate');
+        }
+        const { count: fallbackCount } = await fallbackQuery;
         
         if (!fallbackCount || fallbackCount === 0) {
-          throw new Error(`No words found in ${table}`);
+          throw new Error(`No ${difficulty} words found in ${table}`);
         }
         
         const randomOffset = Math.floor(Math.random() * fallbackCount);
-        
-        const { data, error } = await supabase
-          .from(table)
-          .select()
-          .eq('word_length', 5)
-          .range(randomOffset, randomOffset)
-          .limit(1);
+        let fallbackDataQuery = supabase.from(table).select().eq('word_length', 5);
+        if (difficulty === 'easy') {
+          fallbackDataQuery = fallbackDataQuery.eq('difficulty_level', 'easy');
+        } else if (difficulty === 'intermediate') {
+          fallbackDataQuery = fallbackDataQuery.eq('difficulty_level', 'intermediate');
+        }
+        const { data, error } = await fallbackDataQuery.range(randomOffset, randomOffset).limit(1);
 
         if (error || !data || data.length === 0) {
           throw error || new Error('No word found');
@@ -229,12 +236,15 @@ export async function getRandomWordMasterWord(wordLength: number = 5): Promise<W
 
       const randomOffset = Math.floor(Math.random() * count);
       
-      const { data, error } = await supabase
-        .from(table)
-        .select()
-        .eq('word_length', wordLength)
-        .range(randomOffset, randomOffset)
-        .limit(1);
+      // Build query with strict difficulty filtering
+      let dataQuery = supabase.from(table).select().eq('word_length', wordLength);
+      if (difficulty === 'easy') {
+        dataQuery = dataQuery.eq('difficulty_level', 'easy');
+      } else if (difficulty === 'intermediate') {
+        dataQuery = dataQuery.eq('difficulty_level', 'intermediate');
+      }
+      
+      const { data, error } = await dataQuery.range(randomOffset, randomOffset).limit(1);
 
       if (error || !data || data.length === 0) {
         throw error || new Error('No word found');

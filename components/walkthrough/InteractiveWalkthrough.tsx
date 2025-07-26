@@ -12,7 +12,7 @@ const steps: Step[] = [
   {
     target: '[data-tour="settings"]',
     title: 'Settings',
-    content: 'Customise your experience! Change word length (3-7 letters) and toggle helpful hints.',
+    content: 'Customise your experience! Change word length (2-7 letters) and toggle helpful hints.',
     placement: 'bottom',
   },
   {

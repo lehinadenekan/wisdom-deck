@@ -39,7 +39,7 @@ const yorubaAlphabet = new Set([
   'ọ', 'ọ̀', 'ọ́', 'ọ̃', 'p', 'r', 's', 'ṣ', 't', 'u', 'ù', 'ú', 'ũ', 'w', 'y'
 ].map(char => char.normalize('NFC')));
 
-const useWordMaster = () => {
+const useWordMaster = (difficulty: 'easy' | 'intermediate' = 'easy') => {
   const [solution, setSolution] = useState<string>('');
   const [solutionInfo, setSolutionInfo] = useState({
     partOfSpeech: '',
@@ -57,8 +57,8 @@ const useWordMaster = () => {
   
   const fetchWord = useCallback(async (length: number = 5) => {
     try {
-      console.log(`Fetching random word with length: ${length}`);
-      const res = await fetch(`/api/word-master/random-word?length=${length}`);
+      console.log(`Fetching random word with length: ${length}, difficulty: ${difficulty}`);
+      const res = await fetch(`/api/word-master/random-word?length=${length}&difficulty=${difficulty}`);
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
@@ -82,7 +82,7 @@ const useWordMaster = () => {
       console.error("Failed to fetch word:", error);
       setErrorMessage("Could not load word. Please refresh.");
     }
-  }, []);
+  }, [difficulty]);
 
   useEffect(() => {
     fetchWord(wordLength);

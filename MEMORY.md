@@ -403,3 +403,18 @@ This section should be kept up to date as further changes are made.
 - Completion modal appears at the end, offering replay or start.
 - Help modal allows restarting the walkthrough at any time.
 - All flows are mobile-optimised and visually consistent.
+
+## Default Hints for New Users (2024-06)
+
+- **Default Settings Change:**
+  - New users now start with English Translation and Part of Speech hints enabled by default.
+  - Tonal Accents remain off by default.
+  - These settings are stored in localStorage, so existing users keep their preferences.
+- **Onboarding & Accessibility:**
+  - Improves onboarding for new users and makes the game more educational and accessible.
+  - Users can still toggle hints on/off in the settings panel.
+- **Persistence:**
+  - If a user has previously saved preferences, those are respected.
+  - Only first-time users (no localStorage) get the new defaults.
+- **Deployment Note:**
+  - If users experience loading issues after deployment, clearing site data (localStorage, cookies, cache) resolves most problems.

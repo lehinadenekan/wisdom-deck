@@ -4,7 +4,7 @@ import Image from 'next/image';
 import GamePreview from '@/components/landing/GamePreview';
 
 const featureHighlights = [
-  { icon: '🎯', text: 'Choose from 3, 4, 5, 6, or 7 letter words' },
+  { icon: '🎯', text: 'Choose from 2, 3, 4, 5, 6, or 7 letter words' },
   { icon: '💡', text: 'Smart hints and tonal accent helpers' },
   { icon: '📊', text: 'Detailed statistics and progress tracking' },
   { icon: '🎮', text: 'Mobile-optimised gaming experience' },

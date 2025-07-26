@@ -301,6 +301,20 @@ The project is now fully functional and deployed with professional branding thro
 
 This section should be kept up to date as further changes are made.
 
+## Default Hints for New Users (2024-06)
+
+- **Onboarding Improvement:**
+  - New users now see English Translation and Part of Speech hints enabled by default for every word.
+  - This makes the game more accessible and educational for beginners and language learners.
+- **Settings Persistence:**
+  - User preferences are stored in localStorage.
+  - Existing users keep their settings; only new users get the new defaults.
+- **User Experience:**
+  - Hints can be toggled on/off at any time in the settings panel.
+  - Tonal Accents remain off by default for a balanced challenge.
+- **Deployment Note:**
+  - If users report the game not loading after an update, instruct them to clear their browser site data (localStorage, cookies, cache) to resolve the issue.
+
 ## Yoruba Word Master Walkthrough (2024-06)
 
 ### Key Features

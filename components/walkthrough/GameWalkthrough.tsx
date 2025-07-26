@@ -33,7 +33,7 @@ export const walkthroughSteps: Step[] = [
   {
     target: '[data-tour="settings"]',
     title: 'Settings',
-    content: 'Customise your experience! Change word length (3-7 letters), toggle helpful hints like tonal accents, and adjust difficulty.',
+    content: 'Customise your experience! Change word length (2-7 letters), toggle helpful hints like tonal accents, and adjust difficulty.',
     placement: 'bottom',
     disableBeacon: true,
   },
